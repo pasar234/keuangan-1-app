@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Keuangan</title>
-    
     <link rel="stylesheet" href="style.css">
-
+</head>
+<body>
+    <div class="app-container">
+        <h2>💰 Keuangan</h2>
         
         <div class="tabs">
-    <button onclick="openScreen('transaksi')">Transaksi</button>
-    <button onclick="openScreen('data')">Data</button>
-    <button onclick="openScreen('backup')">Backup/Restore</button>
+            <button class="btn-nav" onclick="openScreen('transaksi')">Transaksi</button>
+            <button class="btn-nav" onclick="openScreen('data')">Data</button>
+            <button class="btn-nav" onclick="openScreen('backup')">Backup</button>
         </div>
 
         <hr>
@@ -19,60 +21,45 @@
         <div id="transaksi" class="screen">
             <h3>Tambah Hutang / Piutang</h3>
             <form id="financeForm">
-                <select class="custom-input"> id="jenis">
+                <select class="custom-input" id="jenis">
                     <option value="hutang">Tambah Hutang</option>
                     <option value="piutang">Tambah Piutang</option>
                 </select>
-                <input type="date"class="custom-input" id="tanggal" required>
-                <input type="date"class=custom-input" id="jatuh_tempo" placeholder="Jatuh Tempo">
-                <input type="number"class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
-                <textarea class=custom-input" id="keterangan" placeholder="Keterangan"></textarea>
+                <input type="date" class="custom-input" id="tanggal" required>
+                <input type="date" class="custom-input" id="jatuh_tempo" placeholder="Jatuh Tempo">
+                <input type="number" class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
+                <textarea class="custom-input" id="keterangan" placeholder="Keterangan"></textarea>
                 <button type="submit" class="btn-simpan">SIMPAN</button>
             </form>
         </div>
 
         <div id="data" class="screen" style="display:none">
-    <h3>Data Hutang / Piutang</h3>
-    <table border="1" style="width:100%; border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th>Tanggal</th>
-                <th>Jenis</th>
-                <th>Jumlah</th>
-                <th>Keterangan</th>
-            </tr>
-        </thead>
-        <tbody id="tbody-data">
-            </tbody>
-    </table>
-        </div>
-
-            <br>
-            <h3>Data Piutang</h3>
-            <input type="text" placeholder="Cari Piutang...">
-            <table id="tablePiutang">
-                <thead>
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Keterangan</th>
-                        <th>Nilai</th>
-                        <th>Bayar</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <h3>Riwayat Transaksi</h3>
+            <div class="table-responsive">
+                <table id="transaksiTable">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Jenis</th>
+                            <th>Nilai</th>
+                            <th>Ket</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-data">
+                        </tbody>
+                </table>
+            </div>
         </div>
 
         <div id="backup" class="screen" style="display:none">
-            <h3>BACKUP / RESTORE</h3>
-            <button onclick="exportData()">Backup Data (JSON)</button>
+            <h3>Backup & Restore</h3>
+            <button class="btn-nav" onclick="exportData()">Download Backup (JSON)</button>
+            <p>Restore Data:</p>
             <input type="file" id="importFile" onchange="importData(event)">
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
