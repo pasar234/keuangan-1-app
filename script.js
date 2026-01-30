@@ -1,59 +1,58 @@
-// 1. Fungsi Pindah Layar (Tab)
+// Fungsi Pindah Layar
 function openScreen(screenId) {
-    const screens = document.querySelectorAll('.screen');
-    screens.forEach(s => s.style.display = 'none');
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
     document.getElementById(screenId).style.display = 'block';
-    
-    // Jika buka layar data, refresh tabelnya
-    if (screenId === 'data') {
-        tampilkanData();
-    }
+    if (screenId === 'data') tampilkanData();
 }
 
-// 2. Logika Simpan Data
+// Logika Simpan
 document.addEventListener('DOMContentLoaded', function() {
-    const financeForm = document.getElementById('financeForm');
-
-    if (financeForm) {
-        financeForm.addEventListener('submit', function(e) {
+    const form = document.getElementById('financeForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Ambil data dari form
-            const transaksi = {
+            const data = {
                 id: Date.now(),
                 jenis: document.getElementById('jenis').value,
                 tanggal: document.getElementById('tanggal').value,
-                jatuh_tempo: document.getElementById('jatuh_tempo').value,
                 jumlah: document.getElementById('jumlah').value,
                 keterangan: document.getElementById('keterangan').value
             };
 
-            // Simpan ke LocalStorage
-            let listTransaksi = JSON.parse(localStorage.getItem('data_keuangan')) || [];
-            listTransaksi.push(transaksi);
-            localStorage.setItem('data_keuangan', JSON.stringify(listTransaksi));
+            let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+            list.push(data);
+            localStorage.setItem('data_keuangan', JSON.stringify(list));
 
             alert("Data Berhasil Disimpan!");
-            financeForm.reset();
+            form.reset();
         });
     }
 });
 
-// 3. Fungsi Menampilkan Data ke Tabel
+// Fungsi Tampilkan Data & Hapus
 function tampilkanData() {
-    const tbody = document.getElementById('tbody-data'); // Kita akan tambahkan ID ini di HTML
-    const listTransaksi = JSON.parse(localStorage.getItem('data_keuangan')) || [];
-    
-    if (!tbody) return;
-    
+    const tbody = document.getElementById('tbody-data');
+    let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
     tbody.innerHTML = '';
-    listTransaksi.forEach((item) => {
-        const row = `<tr>
-            <td>${item.tanggal}</td>
-            <td>${item.jenis.toUpperCase()}</td>
-            <td>Rp ${Number(item.jumlah).toLocaleString()}</td>
-            <td>${item.keterangan}</td>
-        </tr>`;
-        tbody.insertAdjacentHTML('beforeend', row);
+
+    list.forEach((item, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${item.tanggal}</td>
+                <td>${item.jenis}</td>
+                <td>${Number(item.jumlah).toLocaleString()}</td>
+                <td>${item.keterangan}</td>
+                <td><button onclick="hapusData(${index})" style="background:red; color:white; border:none; border-radius:4px;">X</button></td>
+            </tr>`;
     });
-                                     }
+}
+
+function hapusData(index) {
+    if(confirm("Hapus data ini?")) {
+        let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+        list.splice(index, 1);
+        localStorage.setItem('data_keuangan', JSON.stringify(list));
+        tampilkanData();
+    }
+}
