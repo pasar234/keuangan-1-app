@@ -2,7 +2,7 @@ const cacheName = 'stok-pintar-v1';
 const assets = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.js
 ];
 
 // Tahap Instalasi: Menyimpan file ke dalam memori HP
@@ -35,3 +35,4 @@ self.addEventListener('fetch', e => {
     })
   );
 });
+
