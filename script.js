@@ -1,31 +1,18 @@
-document.getElementById('financeForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+// Menunggu seluruh halaman siap
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('financeForm');
 
-    // 1. Mengambil nilai dari input yang sudah kamu buat
-    const jenis = document.getElementById('jenis').value;
-    const tanggal = document.getElementById('tanggal').value;
-    const jumlah = document.getElementById('jumlah').value;
-    const keterangan = document.getElementById('keterangan').value;
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Supaya halaman tidak refresh/kedip
 
-    // 2. Validasi sederhana
-    if (!tanggal || !jumlah) {
-        alert("Mohon isi tanggal dan jumlah uang!");
-        return;
-    }
+        // Ambil data
+        const jenis = document.getElementById('jenis').value;
+        const jumlah = document.getElementById('jumlah').value;
 
-    // 3. Membuat objek data
-    const dataBaru = {
-        jenis: jenis,
-        tanggal: tanggal,
-        jumlah: jumlah,
-        keterangan: keterangan
-    };
-
-    console.log("Data berhasil ditangkap:", dataBaru);
-    
-    // 4. Munculkan pesan sukses
-    alert("Transaksi " + jenis + " sebesar " + jumlah + " telah disimpan!");
-    
-    // 5. Kosongkan form kembali
-    this.reset();
+        // Tes apakah bekerja dengan memunculkan pesan
+        alert("Berhasil! Menambah " + jenis + " sebesar " + jumlah);
+        
+        // Kosongkan form lagi
+        form.reset();
+    });
 });
