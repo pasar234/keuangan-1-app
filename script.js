@@ -1,40 +1,59 @@
-// 1. Fungsi untuk Pindah Layar (Tab)
+// 1. Fungsi Pindah Layar (Tab)
 function openScreen(screenId) {
-    // Sembunyikan semua layar
     const screens = document.querySelectorAll('.screen');
     screens.forEach(s => s.style.display = 'none');
-
-    // Tampilkan layar yang dipilih
     document.getElementById(screenId).style.display = 'block';
+    
+    // Jika buka layar data, refresh tabelnya
+    if (screenId === 'data') {
+        tampilkanData();
+    }
 }
 
-// 2. Fungsi Simpan Transaksi
+// 2. Logika Simpan Data
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('financeForm');
+    const financeForm = document.getElementById('financeForm');
 
-    if (form) {
-        form.addEventListener('submit', function(e) {
+    if (financeForm) {
+        financeForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Ambil data dari input
-            const jenis = document.getElementById('jenis').value;
-            const tanggal = document.getElementById('tanggal').value;
-            const jumlah = document.getElementById('jumlah').value;
-            const keterangan = document.getElementById('keterangan').value;
+            // Ambil data dari form
+            const transaksi = {
+                id: Date.now(),
+                jenis: document.getElementById('jenis').value,
+                tanggal: document.getElementById('tanggal').value,
+                jatuh_tempo: document.getElementById('jatuh_tempo').value,
+                jumlah: document.getElementById('jumlah').value,
+                keterangan: document.getElementById('keterangan').value
+            };
 
-            if (!jumlah || !tanggal) {
-                alert("Tanggal dan Jumlah harus diisi!");
-                return;
-            }
-
-            // Simpan ke LocalStorage (Memori HP/Tablet)
-            const transaksiBaru = { jenis, tanggal, jumlah, keterangan };
-            let semuaData = JSON.parse(localStorage.getItem('data_keuangan')) || [];
-            semuaData.push(transaksiBaru);
-            localStorage.setItem('data_keuangan', JSON.stringify(semuaData));
+            // Simpan ke LocalStorage
+            let listTransaksi = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+            listTransaksi.push(transaksi);
+            localStorage.setItem('data_keuangan', JSON.stringify(listTransaksi));
 
             alert("Data Berhasil Disimpan!");
-            form.reset();
+            financeForm.reset();
         });
     }
 });
+
+// 3. Fungsi Menampilkan Data ke Tabel
+function tampilkanData() {
+    const tbody = document.getElementById('tbody-data'); // Kita akan tambahkan ID ini di HTML
+    const listTransaksi = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+    
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    listTransaksi.forEach((item) => {
+        const row = `<tr>
+            <td>${item.tanggal}</td>
+            <td>${item.jenis.toUpperCase()}</td>
+            <td>Rp ${Number(item.jumlah).toLocaleString()}</td>
+            <td>${item.keterangan}</td>
+        </tr>`;
+        tbody.insertAdjacentHTML('beforeend', row);
+    });
+                                     }
