@@ -32,19 +32,20 @@
         </div>
 
         <div id="data" class="screen" style="display:none">
-            <h3>Data Hutang</h3>
-            <input type="text" placeholder="Cari Hutang...">
-            <table id="tableHutang">
-                <thead>
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Keterangan</th>
-                        <th>Nilai</th>
-                        <th>Bayar</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+    <h3>Data Hutang / Piutang</h3>
+    <table border="1" style="width:100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Jenis</th>
+                <th>Jumlah</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-data">
+            </tbody>
+    </table>
+        </div>
 
             <br>
             <h3>Data Piutang</h3>
@@ -71,6 +72,7 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
