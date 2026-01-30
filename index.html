@@ -2,11 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Keuangan</title>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <h2>Keuangan</h2>
         
         <div class="tabs">
@@ -20,14 +22,14 @@
         <div id="transaksi" class="screen">
             <h3>Tambah Hutang / Piutang</h3>
             <form id="financeForm">
-                <select id="jenis">
+                <select class="custom-input"> id="jenis">
                     <option value="hutang">Tambah Hutang</option>
                     <option value="piutang">Tambah Piutang</option>
                 </select>
-                <input type="date" id="tanggal" required>
-                <input type="date" id="jatuh_tempo" placeholder="Jatuh Tempo">
-                <input type="number" id="jumlah" placeholder="Jumlah (Nilai)" required>
-                <textarea id="keterangan" placeholder="Keterangan"></textarea>
+                <input type="date"class="custom-input" id="tanggal" required>
+                <input type="date"class=custom-input" id="jatuh_tempo" placeholder="Jatuh Tempo">
+                <input type="number"class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
+                <textarea class=custom-input" id="keterangan" placeholder="Keterangan"></textarea>
                 <button type="submit" class="btn-simpan">SIMPAN</button>
             </form>
         </div>
@@ -72,3 +74,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
