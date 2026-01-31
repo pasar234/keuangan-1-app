@@ -61,11 +61,18 @@
         </div>
 
         <div id="backup" class="screen" style="display:none">
-            <h3>Backup Data</h3>
-            <button onclick="exportData()" class="btn-nav">Download Backup (JSON)</button>
-        </div>
+    <h3>Backup & Restore</h3>
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+        <p><strong>1. Simpan Data:</strong></p>
+        <button onclick="exportData()" class="btn-nav" style="width: 100%; margin-bottom: 20px;">Download Backup (JSON)</button>
+        
+        <p><strong>2. Masukkan Data (Restore):</strong></p>
+        <input type="file" id="importFile" accept=".json" style="margin-bottom: 10px;">
+        <button onclick="importData()" class="btn-simpan" style="background: #5bc0de;">Proses Restore Data</button>
     </div>
+</div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
