@@ -25,8 +25,8 @@
                     <option value="hutang">Tambah Hutang</option>
                     <option value="piutang">Tambah Piutang</option>
                 </select>
-                <input type="date" class="custom-input" id="tanggal" required>
-                <input type="date" class="custom-input" id="jatuh_tempo" placeholder="Jatuh Tempo">
+                <input type="date" class="custom-input" id="tanggal" required title="Tanggal Transaksi">
+                <input type="date" class="custom-input" id="jatuh_tempo" title="Tanggal Jatuh Tempo">
                 <input type="number" class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
                 <textarea class="custom-input" id="keterangan" placeholder="Keterangan"></textarea>
                 <button type="submit" class="btn-simpan">SIMPAN</button>
@@ -36,30 +36,27 @@
         <div id="data" class="screen" style="display:none">
             <h3>Riwayat Transaksi</h3>
             <div class="table-responsive">
-                <table id="transaksiTable">
+                <table>
                     <thead>
                         <tr>
-                            <th>Tanggal</th>
-                            <th>Jenis</th>
+                            <th>Tgl Transaksi</th>
+                            <th>Jatuh Tempo</th>
+                            <th>Keterangan</th>
                             <th>Nilai</th>
-                            <th>Ket</th>
+                            <th>Bayar</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-data">
-                        </tbody>
+                    <tbody id="tbody-data"></tbody>
                 </table>
             </div>
         </div>
 
         <div id="backup" class="screen" style="display:none">
             <h3>Backup & Restore</h3>
-            <button class="btn-nav" onclick="exportData()">Download Backup (JSON)</button>
-            <p>Restore Data:</p>
-            <input type="file" id="importFile" onchange="importData(event)">
+            <button onclick="exportData()">Download Backup (JSON)</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
