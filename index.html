@@ -11,9 +11,9 @@
         <h2>💰 Keuangan</h2>
         
         <div class="tabs">
-            <button class="btn-nav" onclick="openScreen('transaksi')">Transaksi</button>
-            <button class="btn-nav" onclick="openScreen('data')">Data</button>
-            <button class="btn-nav" onclick="openScreen('backup')">Backup</button>
+            <button onclick="openScreen('transaksi')">Transaksi</button>
+            <button onclick="openScreen('data')">Data</button>
+            <button onclick="openScreen('backup')">Backup</button>
         </div>
 
         <hr>
@@ -35,44 +35,36 @@
 
         <div id="data" class="screen" style="display:none">
             <h3>Riwayat Transaksi</h3>
-            
             <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input">
             
-            <div id="ringkasan-saldo" style="background: #eef2f3; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; display: flex; justify-content: space-around;">
-                <div style="color: #d9534f;">Hutang: Rp <span id="totalHutang">0</span></div>
-                <div style="color: #5cb85c;">Piutang: Rp <span id="totalPiutang">0</span></div>
+            <div id="ringkasan-saldo" style="margin: 10px 0; font-weight: bold;">
+                Hutang: Rp <span id="totalHutang">0</span> | Piutang: Rp <span id="totalPiutang">0</span>
             </div>
 
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tgl</th>
-                            <th>Jatuh Tempo</th>
-                            <th>Ket</th>
-                            <th>Nilai</th>
-                            <th>Bayar</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-data"></tbody>
-                </table>
-            </div>
+            <table border="1" style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Tgl</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Ket</th>
+                        <th>Nilai</th>
+                        <th>Bayar</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-data"></tbody>
+            </table>
         </div>
 
         <div id="backup" class="screen" style="display:none">
-    <h3>Backup & Restore</h3>
-    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
-        <p><strong>1. Simpan Data:</strong></p>
-        <button onclick="exportData()" class="btn-nav" style="width: 100%; margin-bottom: 20px;">Download Backup (JSON)</button>
-        
-        <p><strong>2. Masukkan Data (Restore):</strong></p>
-        <input type="file" id="importFile" accept=".json" style="margin-bottom: 10px;">
-        <button onclick="importData()" class="btn-simpan" style="background: #5bc0de;">Proses Restore Data</button>
+            <h3>Backup & Restore</h3>
+            <button onclick="exportData()">Download Backup (JSON)</button>
+            <br><br>
+            <input type="file" id="importFile" accept=".json">
+            <button onclick="importData()">Restore Data</button>
+        </div>
     </div>
-</div>
 
     <script src="script.js"></script>
 </body>
-</html>
-
+    </html>
