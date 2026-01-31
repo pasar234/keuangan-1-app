@@ -1,28 +1,71 @@
-<div id="data" class="screen" style="display:none">
-    <h3>Riwayat Transaksi</h3>
-    
-    <div style="margin-bottom: 15px;">
-        <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input" style="width: 100%;">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Keuangan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <h2>💰 Keuangan</h2>
         
-        <div id="ringkasan-saldo" style="background: #eef2f3; padding: 10px; border-radius: 8px; margin-top: 10px; font-weight: bold;">
-            <div style="color: #d9534f;">Total Hutang: Rp <span id="totalHutang">0</span></div>
-            <div style="color: #5cb85c;">Total Piutang: Rp <span id="totalPiutang">0</span></div>
+        <div class="tabs">
+            <button class="btn-nav" onclick="openScreen('transaksi')">Transaksi</button>
+            <button class="btn-nav" onclick="openScreen('data')">Data</button>
+            <button class="btn-nav" onclick="openScreen('backup')">Backup</button>
+        </div>
+
+        <hr>
+
+        <div id="transaksi" class="screen">
+            <h3>Tambah Hutang / Piutang</h3>
+            <form id="financeForm">
+                <select class="custom-input" id="jenis">
+                    <option value="hutang">Tambah Hutang</option>
+                    <option value="piutang">Tambah Piutang</option>
+                </select>
+                <input type="date" class="custom-input" id="tanggal" required>
+                <input type="date" class="custom-input" id="jatuh_tempo">
+                <input type="number" class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
+                <textarea class="custom-input" id="keterangan" placeholder="Keterangan"></textarea>
+                <button type="submit" class="btn-simpan">SIMPAN</button>
+            </form>
+        </div>
+
+        <div id="data" class="screen" style="display:none">
+            <h3>Riwayat Transaksi</h3>
+            
+            <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input">
+            
+            <div id="ringkasan-saldo" style="background: #eef2f3; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; display: flex; justify-content: space-around;">
+                <div style="color: #d9534f;">Hutang: Rp <span id="totalHutang">0</span></div>
+                <div style="color: #5cb85c;">Piutang: Rp <span id="totalPiutang">0</span></div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tgl</th>
+                            <th>Jatuh Tempo</th>
+                            <th>Ket</th>
+                            <th>Nilai</th>
+                            <th>Bayar</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-data"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="backup" class="screen" style="display:none">
+            <h3>Backup Data</h3>
+            <button onclick="exportData()" class="btn-nav">Download Backup (JSON)</button>
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>Tgl Transaksi</th>
-                    <th>Jatuh Tempo</th>
-                    <th>Keterangan</th>
-                    <th>Nilai</th>
-                    <th>Bayar</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="tbody-data"></tbody>
-        </table>
-    </div>
-</div>
+    <script src="script.js"></script>
+</body>
+</html>
