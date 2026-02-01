@@ -11,9 +11,9 @@
         <h2>💰 Keuangan</h2>
         
         <div class="tabs">
-            <button onclick="openScreen('transaksi')">Transaksi</button>
-            <button onclick="openScreen('data')">Data</button>
-            <button onclick="openScreen('backup')">Backup</button>
+            <button class="btn-nav" onclick="openScreen('transaksi')">Transaksi</button>
+            <button class="btn-nav" onclick="openScreen('data')">Data</button>
+            <button class="btn-nav" onclick="openScreen('backup')">Backup</button>
         </div>
 
         <hr>
@@ -35,20 +35,17 @@
 
         <div id="data" class="screen" style="display:none">
             <h3>Riwayat Transaksi</h3>
-            <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input">
-            
-            <div id="ringkasan-saldo" style="margin: 10px 0; font-weight: bold; color: #2c3e50;">
+            <div id="ringkasan-saldo" style="margin-bottom: 10px; font-weight: bold;">
                 Hutang: Rp <span id="totalHutang">0</span> | Piutang: Rp <span id="totalPiutang">0</span>
             </div>
-
-            <table border="1">
+            <table border="1" style="width:100%; border-collapse: collapse;">
                 <thead>
                     <tr>
                         <th>Tgl</th>
                         <th>Jatuh Tempo</th>
                         <th>Ket</th>
                         <th>Nilai</th>
-                        <th>Bayar</th>
+                        <th>Bayar/Sisa</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -58,15 +55,9 @@
 
         <div id="backup" class="screen" style="display:none">
             <h3>Backup & Restore</h3>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button onclick="exportData()" class="btn-simpan" style="background: #27ae60;">Download Backup (JSON)</button>
-                <hr>
-                <input type="file" id="importFile" accept=".json" class="custom-input">
-                <button onclick="importData()" class="btn-simpan" style="background: #2980b9;">Restore Data dari File</button>
-            </div>
+            <button onclick="exportData()">Download Backup (JSON)</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
