@@ -7,36 +7,41 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <h2>💰 Keuangan</h2>
+        
         <div class="tabs">
             <button onclick="openScreen('transaksi')">Transaksi</button>
             <button onclick="openScreen('data')">Data</button>
             <button onclick="openScreen('backup')">Backup</button>
         </div>
+
         <hr>
 
         <div id="transaksi" class="screen">
             <h3>Tambah Hutang / Piutang</h3>
             <form id="financeForm">
-                <select id="jenis">
+                <select class="custom-input" id="jenis">
                     <option value="hutang">Tambah Hutang</option>
                     <option value="piutang">Tambah Piutang</option>
                 </select>
-                <input type="date" id="tanggal" required>
-                <input type="date" id="jatuh_tempo" required>
-                <input type="number" id="jumlah" placeholder="Jumlah (Nilai)" required>
-                <input type="text" id="keterangan" placeholder="Keterangan">
-                <button type="submit">SIMPAN</button>
+                <input type="date" class="custom-input" id="tanggal" required>
+                <input type="date" class="custom-input" id="jatuh_tempo">
+                <input type="number" class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
+                <textarea class="custom-input" id="keterangan" placeholder="Keterangan"></textarea>
+                <button type="submit" class="btn-simpan">SIMPAN</button>
             </form>
         </div>
 
         <div id="data" class="screen" style="display:none">
             <h3>Riwayat Transaksi</h3>
-            <div class="summary">
-                <p><strong>Hutang: <span id="totalHutang">Rp 0</span> | Piutang: <span id="totalPiutang">Rp 0</span></strong></p>
+            <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input">
+            
+            <div id="ringkasan-saldo" style="margin: 10px 0; font-weight: bold;">
+                Hutang: Rp <span id="totalHutang">0</span> | Piutang: Rp <span id="totalPiutang">0</span>
             </div>
-            <table border="1" width="100%" style="border-collapse: collapse;">
+
+            <table border="1" style="width:100%; border-collapse: collapse;">
                 <thead>
                     <tr>
                         <th>Tgl</th>
@@ -44,28 +49,22 @@
                         <th>Ket</th>
                         <th>Nilai</th>
                         <th>Bayar</th>
-                        <th>Sisa</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody"></tbody>
+                <tbody id="tbody-data"></tbody>
             </table>
         </div>
 
         <div id="backup" class="screen" style="display:none">
-            <h3>Backup Data</h3>
+            <h3>Backup & Restore</h3>
             <button onclick="exportData()">Download Backup (JSON)</button>
+            <br><br>
+            <input type="file" id="importFile" accept=".json">
+            <button onclick="importData()">Restore Data</button>
         </div>
-    </div>
-
-    <div id="editModal" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -30%); background:#fff; padding:20px; border:2px solid #000; box-shadow: 5px 5px 15px rgba(0,0,0,0.3); z-index:100;">
-        <h4>Update Pembayaran</h4>
-        <input type="number" id="inputBayar" placeholder="Jumlah Bayar">
-        <br><br>
-        <button onclick="prosesSimpanEdit()">Update</button>
-        <button onclick="document.getElementById('editModal').style.display='none'">Batal</button>
     </div>
 
     <script src="script.js"></script>
 </body>
-            </html>
+</html>
