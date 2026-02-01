@@ -63,5 +63,22 @@
     </div>
 
     <script src="script.js"></script>
+<div id="paymentModal" class="modal" style="display:none; position:fixed; z-index:99; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+    <div style="background:white; margin:15% auto; padding:20px; width:80%; border-radius:10px; max-width:400px;">
+        <h3>Input Pembayaran</h3>
+        <label>Tanggal Bayar:</label>
+        <input type="date" id="tglBayarInput" class="custom-input">
+        <label>Nominal:</label>
+        <input type="number" id="nominalInput" class="custom-input">
+        <label>Metode (Tunai/Transfer):</label>
+        <input type="text" id="metodeInput" placeholder="Contoh: Tunai" class="custom-input">
+        
+        <div style="margin-top:15px; display:flex; gap:10px;">
+            <button onclick="prosesBayar()" class="btn-simpan" style="background:green;">OKE</button>
+            <button onclick="tutupModal()" class="btn-simpan" style="background:gray;">BATAL</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
