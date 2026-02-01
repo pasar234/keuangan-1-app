@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
+    <div class="container">
         <h2>💰 Keuangan</h2>
         
         <div class="tabs">
@@ -21,50 +21,67 @@
         <div id="transaksi" class="screen">
             <h3>Tambah Hutang / Piutang</h3>
             <form id="financeForm">
-                <select class="custom-input" id="jenis">
+                <select id="jenis" required>
                     <option value="hutang">Tambah Hutang</option>
                     <option value="piutang">Tambah Piutang</option>
                 </select>
-                <input type="date" class="custom-input" id="tanggal" required>
-                <input type="date" class="custom-input" id="jatuh_tempo">
-                <input type="number" class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
-                <textarea class="custom-input" id="keterangan" placeholder="Keterangan"></textarea>
-                <button type="submit" class="btn-simpan">SIMPAN</button>
+                <label>Tanggal Transaksi:</label>
+                <input type="date" id="tanggal" required>
+                
+                <label>Tanggal Jatuh Tempo:</label>
+                <input type="date" id="jatuh_tempo" required>
+                
+                <input type="number" id="jumlah" placeholder="Jumlah (Nilai)" required>
+                <textarea id="keterangan" placeholder="Keterangan"></textarea>
+                
+                <button type="submit" class="btn-simpan">SIMPAN DATA</button>
             </form>
         </div>
 
         <div id="data" class="screen" style="display:none">
             <h3>Riwayat Transaksi</h3>
-            <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input">
-            
-            <div id="ringkasan-saldo" style="margin: 10px 0; font-weight: bold;">
-                Hutang: Rp <span id="totalHutang">0</span> | Piutang: Rp <span id="totalPiutang">0</span>
+            <div class="summary">
+                <p><strong>Total Hutang:</strong> <span id="totalHutang">Rp 0</span></p>
+                <p><strong>Total Piutang:</strong> <span id="totalPiutang">Rp 0</span></p>
             </div>
-
-            <table border="1" style="width:100%; border-collapse: collapse;">
+            
+            <h4>Data Hutang</h4>
+            <table id="tableHutang">
                 <thead>
                     <tr>
                         <th>Tgl</th>
-                        <th>Jatuh Tempo</th>
                         <th>Ket</th>
                         <th>Nilai</th>
-                        <th>Bayar</th>
+                        <th>Jatuh Tempo</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="tbody-data"></tbody>
+                <tbody></tbody>
+            </table>
+
+            <br>
+            <h4>Data Piutang</h4>
+            <table id="tablePiutang">
+                <thead>
+                    <tr>
+                        <th>Tgl</th>
+                        <th>Ket</th>
+                        <th>Nilai</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
             </table>
         </div>
 
         <div id="backup" class="screen" style="display:none">
-            <h3>Backup & Restore</h3>
-            <button onclick="exportData()">Download Backup (JSON)</button>
-            <br><br>
-            <input type="file" id="importFile" accept=".json">
-            <button onclick="importData()">Restore Data</button>
+            <h3>Backup / Restore Data</h3>
+            <p>Simpan data Anda ke dalam file JSON untuk dipindahkan ke perangkat lain.</p>
+            <button onclick="exportData()" class="btn-backup">Download Backup (JSON)</button>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-    </html>
+</html>
