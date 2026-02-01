@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Keuangan</title>
+    <title>Keuangan App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,67 +21,49 @@
         <div id="transaksi" class="screen">
             <h3>Tambah Hutang / Piutang</h3>
             <form id="financeForm">
-                <select id="jenis" required>
+                <select id="jenis">
                     <option value="hutang">Tambah Hutang</option>
                     <option value="piutang">Tambah Piutang</option>
                 </select>
-                <label>Tanggal Transaksi:</label>
                 <input type="date" id="tanggal" required>
-                
-                <label>Tanggal Jatuh Tempo:</label>
                 <input type="date" id="jatuh_tempo" required>
-                
                 <input type="number" id="jumlah" placeholder="Jumlah (Nilai)" required>
-                <textarea id="keterangan" placeholder="Keterangan"></textarea>
-                
-                <button type="submit" class="btn-simpan">SIMPAN DATA</button>
+                <input type="text" id="keterangan" placeholder="Keterangan">
+                <button type="submit">SIMPAN</button>
             </form>
         </div>
 
         <div id="data" class="screen" style="display:none">
             <h3>Riwayat Transaksi</h3>
+            
+            <div class="search-box">
+                🔍 <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari keterangan...">
+            </div>
+
             <div class="summary">
-                <p><strong>Total Hutang:</strong> <span id="totalHutang">Rp 0</span></p>
-                <p><strong>Total Piutang:</strong> <span id="totalPiutang">Rp 0</span></p>
+                <p><strong>Hutang: <span id="totalHutang">Rp 0</span> | Piutang: <span id="totalPiutang">Rp 0</span></strong></p>
             </div>
             
-            <h4>Data Hutang</h4>
-            <table id="tableHutang">
+            <table id="mainTable">
                 <thead>
                     <tr>
                         <th>Tgl</th>
+                        <th>Jatuh Tempo</th>
                         <th>Ket</th>
                         <th>Nilai</th>
-                        <th>Jatuh Tempo</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
-            </table>
-
-            <br>
-            <h4>Data Piutang</h4>
-            <table id="tablePiutang">
-                <thead>
-                    <tr>
-                        <th>Tgl</th>
-                        <th>Ket</th>
-                        <th>Nilai</th>
-                        <th>Jatuh Tempo</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
+                <tbody id="tableBody">
+                    </tbody>
             </table>
         </div>
 
         <div id="backup" class="screen" style="display:none">
-            <h3>Backup / Restore Data</h3>
-            <p>Simpan data Anda ke dalam file JSON untuk dipindahkan ke perangkat lain.</p>
-            <button onclick="exportData()" class="btn-backup">Download Backup (JSON)</button>
+            <h3>Backup Data</h3>
+            <button onclick="exportData()">Download Backup (JSON)</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
