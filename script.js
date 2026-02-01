@@ -20,18 +20,21 @@ function tampilkanData() {
     };
 
     list.forEach((item, index) => {
+    list.forEach((item, index) => {
         if (item.keterangan.toLowerCase().includes(searchFilter)) {
             const sisa = item.jumlah - item.bayar;
             if (item.jenis === 'hutang') totalHutang += sisa;
             else totalPiutang += sisa;
 
-            // LOGIKA WARNA MERAH JATUH TEMPO
+            // --- LOGIKA WARNA MERAH JATUH TEMPO (FIXED) ---
             let styleJatuhTempo = "";
             if (item.jatuh_tempo && item.jatuh_tempo !== '-') {
                 const tglJatuhTempo = new Date(item.jatuh_tempo);
-                // Jika sudah masuk atau lewat tanggalnya, beri warna merah & tebal
+                tglJatuhTempo.setHours(0, 0, 0, 0); // Reset waktu agar perbandingan akurat
+
+                // Jika tanggal hari ini sudah sama atau melewati jatuh tempo DAN belum lunas
                 if (tglJatuhTempo <= hariIni && sisa > 0) {
-                    styleJatuhTempo = "color: red; font-weight: bold;";
+                    styleJatuhTempo = "color: #ff0000; font-weight: bold; font-size: 1.1em;";
                 }
             }
 
@@ -42,7 +45,7 @@ function tampilkanData() {
                     <td>${item.keterangan}</td>
                     <td>${item.jumlah.toLocaleString()}</td>
                     <td><button onclick="inputBayar(${index})">${item.bayar > 0 ? item.bayar.toLocaleString() : 'Bayar'}</button></td>
-                    <td><button onclick="hapusData(${index})" style="background:red; color:white;">X</button></td>
+                    <td><button onclick="hapusData(${index})" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px;">X</button></td>
                 </tr>`;
         }
     });
@@ -50,3 +53,4 @@ function tampilkanData() {
     if(document.getElementById('totalHutang')) document.getElementById('totalHutang').innerText = totalHutang.toLocaleString();
     if(document.getElementById('totalPiutang')) document.getElementById('totalPiutang').innerText = totalPiutang.toLocaleString();
             }
+
