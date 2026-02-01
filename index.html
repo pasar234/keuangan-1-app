@@ -21,15 +21,15 @@
         <div id="transaksi" class="screen">
             <h3>Tambah Hutang / Piutang</h3>
             <form id="financeForm">
-    <select class="custom-input" id="jenis">
-        <option value="hutang">Tambah Hutang</option>
-        <option value="piutang">Tambah Piutang</option>
-    </select>
-    <input type="date" class="custom-input" id="tanggal" required>
-    <input type="date" class="custom-input" id="jatuh_tempo">
-    <input type="number" class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
-    <textarea class="custom-input" id="keterangan" placeholder="Keterangan"></textarea>
-    <button type="submit" class="btn-simpan">SIMPAN</button>
+                <select class="custom-input" id="jenis">
+                    <option value="hutang">Tambah Hutang</option>
+                    <option value="piutang">Tambah Piutang</option>
+                </select>
+                <input type="date" class="custom-input" id="tanggal" required>
+                <input type="date" class="custom-input" id="jatuh_tempo">
+                <input type="number" class="custom-input" id="jumlah" placeholder="Jumlah (Nilai)" required>
+                <textarea class="custom-input" id="keterangan" placeholder="Keterangan"></textarea>
+                <button type="submit" class="btn-simpan">SIMPAN</button>
             </form>
         </div>
 
@@ -37,11 +37,11 @@
             <h3>Riwayat Transaksi</h3>
             <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input">
             
-            <div id="ringkasan-saldo" style="margin: 10px 0; font-weight: bold;">
+            <div id="ringkasan-saldo" style="margin: 10px 0; font-weight: bold; color: #2c3e50;">
                 Hutang: Rp <span id="totalHutang">0</span> | Piutang: Rp <span id="totalPiutang">0</span>
             </div>
 
-            <table border="1" style="width:100%; border-collapse: collapse;">
+            <table border="1">
                 <thead>
                     <tr>
                         <th>Tgl</th>
@@ -58,14 +58,15 @@
 
         <div id="backup" class="screen" style="display:none">
             <h3>Backup & Restore</h3>
-            <button onclick="exportData()">Download Backup (JSON)</button>
-            <br><br>
-            <input type="file" id="importFile" accept=".json">
-            <button onclick="importData()">Restore Data</button>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button onclick="exportData()" class="btn-simpan" style="background: #27ae60;">Download Backup (JSON)</button>
+                <hr>
+                <input type="file" id="importFile" accept=".json" class="custom-input">
+                <button onclick="importData()" class="btn-simpan" style="background: #2980b9;">Restore Data dari File</button>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
