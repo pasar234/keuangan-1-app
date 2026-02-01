@@ -1,98 +1,137 @@
-let currentEditIndex = null;
-
-function openScreen(id) {
+// 1. Fungsi Pindah Layar (Sudah diperbaiki agar navigasi lancar)
+function openScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-    if(id === 'data') renderTables();
+    const target = document.getElementById(screenId);
+    if (target) target.style.display = 'block';
+    
+    // Refresh tabel setiap kali masuk ke layar data
+    if (screenId === 'data') tampilkanData();
 }
 
-document.getElementById('financeForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const data = {
-        jenis: document.getElementById('jenis').value,
-        tgl: formatDate(document.getElementById('tanggal').value),
-        jt_raw: document.getElementById('jatuh_tempo').value, // Untuk cek warna
-        jt: formatDate(document.getElementById('jatuh_tempo').value),
-        nilai: parseInt(document.getElementById('jumlah').value) || 0,
-        ket: document.getElementById('keterangan').value,
-        bayar: 0
-    };
+// 2. Logika Simpan Transaksi (Ditambah pemanggilan tampilkanData)
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('financeForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                id: Date.now(),
+                jenis: document.getElementById('jenis').value,
+                tanggal: document.getElementById('tanggal').value,
+                jatuh_tempo: document.getElementById('jatuh_tempo').value || '-',
+                jumlah: parseFloat(document.getElementById('jumlah').value),
+                bayar: 0,
+                keterangan: document.getElementById('keterangan').value
+            };
 
-    let list = JSON.parse(localStorage.getItem('keuangan_data')) || [];
-    list.push(data);
-    localStorage.setItem('keuangan_data', JSON.stringify(list));
-    alert('Data Tersimpan!');
-    this.reset();
-    openScreen('data');
+            let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+            list.push(data);
+            localStorage.setItem('data_keuangan', JSON.stringify(list));
+            
+            alert("Data Berhasil Disimpan!");
+            form.reset();
+            
+            // PENTING: Langsung update tabel setelah simpan
+            tampilkanData();
+        });
+    }
 });
 
-function renderTables() {
-    const list = JSON.parse(localStorage.getItem('keuangan_data')) || [];
-    const body = document.getElementById('tableBody');
-    let h = 0, p = 0;
-    const today = new Date();
-    today.setHours(0,0,0,0);
+// 3. Menampilkan Data dengan Format Tanggal d-m-y
+function tampilkanData() {
+    const tbody = document.getElementById('tbody-data');
+    if (!tbody) return; // Mencegah error jika elemen tidak ada
 
-    body.innerHTML = '';
-    list.forEach((item, i) => {
-        const tglJT = new Date(item.jt_raw);
-        const overdue = tglJT <= today;
-        const styleRed = overdue ? 'style="color:red; font-weight:bold;"' : '';
-        const sisa = item.nilai - item.bayar;
+    const searchFilter = document.getElementById('inputCari') ? document.getElementById('inputCari').value.toLowerCase() : '';
+    let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+    
+    let totalHutang = 0;
+    let totalPiutang = 0;
+    tbody.innerHTML = '';
 
-        body.innerHTML += `<tr>
-            <td>${item.tgl}</td>
-            <td ${styleRed}>${item.jt}</td>
-            <td>${item.ket}</td>
-            <td>${item.nilai.toLocaleString()}</td>
-            <td>${item.bayar.toLocaleString()}</td>
-            <td>${sisa.toLocaleString()}</td>
-            <td>
-                <button onclick="tombolEdit(${i})">✏️</button>
-                <button onclick="hapus(${i})">❌</button>
-            </td>
-        </tr>`;
-        if(item.jenis === 'hutang') h += sisa; else p += sisa;
+    // Fungsi pembalik tanggal
+    const formatTgl = (tgl) => {
+        if (!tgl || tgl === '-') return '-';
+        const parts = tgl.split('-');
+        return parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : tgl;
+    };
+
+    list.forEach((item, index) => {
+        if (item.keterangan.toLowerCase().includes(searchFilter)) {
+            const sisa = item.jumlah - item.bayar;
+            if (item.jenis === 'hutang') totalHutang += sisa;
+            else totalPiutang += sisa;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${formatTgl(item.tanggal)}</td>
+                    <td>${formatTgl(item.jatuh_tempo)}</td>
+                    <td>${item.keterangan}</td>
+                    <td>${item.jumlah.toLocaleString()}</td>
+                    <td><button onclick="inputBayar(${index})">${item.bayar > 0 ? item.bayar.toLocaleString() : 'Bayar'}</button></td>
+                    <td><button onclick="hapusData(${index})" style="background:red; color:white;">X</button></td>
+                </tr>`;
+        }
     });
-    document.getElementById('totalHutang').innerText = 'Rp ' + h.toLocaleString();
-    document.getElementById('totalPiutang').innerText = 'Rp ' + p.toLocaleString();
+
+    // Update Ringkasan Saldo
+    if(document.getElementById('totalHutang')) document.getElementById('totalHutang').innerText = totalHutang.toLocaleString();
+    if(document.getElementById('totalPiutang')) document.getElementById('totalPiutang').innerText = totalPiutang.toLocaleString();
 }
 
-function tombolEdit(i) {
-    currentEditIndex = i;
-    const list = JSON.parse(localStorage.getItem('keuangan_data'));
-    document.getElementById('inputBayar').value = list[i].bayar;
-    document.getElementById('editModal').style.display = 'block';
-}
-
-function prosesSimpanEdit() {
-    let list = JSON.parse(localStorage.getItem('keuangan_data'));
-    list[currentEditIndex].bayar = parseInt(document.getElementById('inputBayar').value) || 0;
-    localStorage.setItem('keuangan_data', JSON.stringify(list));
-    document.getElementById('editModal').style.display = 'none';
-    renderTables();
-}
-
-function hapus(i) {
-    if(confirm('Hapus data ini?')) {
-        let list = JSON.parse(localStorage.getItem('keuangan_data'));
-        list.splice(i, 1);
-        localStorage.setItem('keuangan_data', JSON.stringify(list));
-        renderTables();
+// 4. Fungsi Bayar (Tunai / Transfer)
+function inputBayar(index) {
+    let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+    let nominal = prompt("Masukkan jumlah pembayaran:", list[index].jumlah - list[index].bayar);
+    
+    if (nominal !== null && !isNaN(nominal)) {
+        let metode = prompt("Keterangan Pembayaran (Contoh: Tunai / Transfer):", "Tunai");
+        if (metode !== null) {
+            list[index].bayar = parseFloat(nominal);
+            list[index].keterangan += ` (${metode})`; 
+            localStorage.setItem('data_keuangan', JSON.stringify(list));
+            tampilkanData();
+        }
     }
 }
 
-function formatDate(s) {
-    if(!s) return "-";
-    const [y, m, d] = s.split('-');
-    return `${d}-${m}-${y}`;
+// 5. Fungsi Hapus
+function hapusData(index) {
+    if(confirm("Hapus data ini?")) {
+        let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
+        list.splice(index, 1);
+        localStorage.setItem('data_keuangan', JSON.stringify(list));
+        tampilkanData();
+    }
 }
 
+// 6. Fungsi Backup & Restore
 function exportData() {
-    const data = localStorage.getItem('keuangan_data');
-    const blob = new Blob([data], {type: 'application/json'});
+    const data = localStorage.getItem('data_keuangan');
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
+    a.href = url;
     a.download = 'backup_keuangan.json';
     a.click();
 }
+
+function importData() {
+    const fileInput = document.getElementById('importFile');
+    const file = fileInput.files[0];
+    if (!file) return alert("Pilih file dulu!");
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            localStorage.setItem('data_keuangan', JSON.stringify(importedData));
+            alert("Restore Berhasil!");
+            location.reload();
+        } catch (err) {
+            alert("File tidak valid!");
+        }
+    };
+    reader.readAsText(file);
+        }
