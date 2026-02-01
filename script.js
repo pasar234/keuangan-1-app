@@ -10,7 +10,7 @@ function openScreen(screenId) {
     }
 }
 
-// --- 2. LOGIKA SIMPAN DATA ---
+// --- 2. LOGIKA SIMPAN ---
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('financeForm');
     if (form) {
@@ -28,14 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
             let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
             list.push(data);
             localStorage.setItem('data_keuangan', JSON.stringify(list));
-            alert("Data Berhasil Disimpan!");
+            alert("Berhasil Disimpan!");
             form.reset();
             openScreen('data');
         });
     }
 });
 
-// --- 3. TAMPILKAN DATA + SISA HUTANG + WARNA MERAH ---
+// --- 3. TAMPILKAN DATA ---
 function tampilkanData() {
     const tbody = document.getElementById('tbody-data');
     if (!tbody) return;
@@ -52,13 +52,13 @@ function tampilkanData() {
         if (item.jenis === 'hutang') totalH += sisa;
         else totalP += sisa;
 
-        // Logika warna merah jatuh tempo
+        // Warna merah jatuh tempo
         let styleJT = "";
         if (item.jatuh_tempo && item.jatuh_tempo !== '-') {
             const tglJT = new Date(item.jatuh_tempo);
             tglJT.setHours(0, 0, 0, 0);
             if (tglJT <= hariIni && sisa > 0) {
-                styleJT = "color: red; font-weight: bold; background-color: #fff0f0;";
+                styleJT = "color: red; font-weight: bold; background-color: #ffe6e6;";
             }
         }
 
@@ -72,21 +72,21 @@ function tampilkanData() {
             <tr>
                 <td>${formatTgl(item.tanggal)}</td>
                 <td style="${styleJT}">${formatTgl(item.jatuh_tempo)}</td>
-                <td>${item.keterangan}</td>
+                <td style="font-size: 0.9em;">${item.keterangan}</td>
                 <td>${item.jumlah.toLocaleString()}</td>
                 <td>
                     <button onclick="inputBayar(${index})">${item.bayar > 0 ? item.bayar.toLocaleString() : 'Bayar'}</button>
-                    <div style="font-size: 11px; color: blue; font-weight: bold; margin-top:2px;">Sisa: ${sisa.toLocaleString()}</div>
+                    <div style="font-size: 11px; color: blue; font-weight: bold; margin-top: 3px;">Sisa: ${sisa.toLocaleString()}</div>
                 </td>
-                <td><button onclick="hapusData(${index})" style="background:red; color:white; border:none; padding:5px;">X</button></td>
+                <td><button onclick="hapusData(${index})" style="background:red; color:white; border:none; padding:4px 8px; border-radius:4px;">X</button></td>
             </tr>`;
     });
 
-    if(document.getElementById('totalHutang')) document.getElementById('totalHutang').innerText = totalH.toLocaleString();
-    if(document.getElementById('totalPiutang')) document.getElementById('totalPiutang').innerText = totalP.toLocaleString();
+    document.getElementById('totalHutang').innerText = totalH.toLocaleString();
+    document.getElementById('totalPiutang').innerText = totalP.toLocaleString();
 }
 
-// --- 4. FUNGSI BAYAR + METODE ---
+// --- 4. FUNGSI BAYAR ---
 function inputBayar(index) {
     let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
     let sisa = list[index].jumlah - list[index].bayar;
@@ -96,14 +96,14 @@ function inputBayar(index) {
         let metode = prompt("Metode (Tunai / Transfer):", "Tunai");
         if (metode !== null) {
             list[index].bayar += parseFloat(nominal);
-            list[index].keterangan += ` (${metode})`; // Tambah metode ke keterangan
+            list[index].keterangan += ` (${metode} Rp${parseFloat(nominal).toLocaleString()})`;
             localStorage.setItem('data_keuangan', JSON.stringify(list));
             tampilkanData();
         }
     }
 }
 
-// --- 5. FUNGSI HAPUS ---
+// --- 5. HAPUS ---
 function hapusData(index) {
     if(confirm("Hapus data ini?")) {
         let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
@@ -111,4 +111,15 @@ function hapusData(index) {
         localStorage.setItem('data_keuangan', JSON.stringify(list));
         tampilkanData();
     }
-                       }
+}
+
+// --- 6. BACKUP ---
+function exportData() {
+    const data = localStorage.getItem('data_keuangan');
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'backup.json';
+    a.click();
+                }
