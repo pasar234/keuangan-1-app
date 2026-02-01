@@ -1,69 +1,33 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keuangan App</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h2>💰 Keuangan</h2>
-        
-        <div class="tabs">
-            <button onclick="openScreen('transaksi')">Transaksi</button>
-            <button onclick="openScreen('data')">Data</button>
-            <button onclick="openScreen('backup')">Backup</button>
-        </div>
-
-        <hr>
-
-        <div id="transaksi" class="screen">
-            <h3>Tambah Hutang / Piutang</h3>
-            <form id="financeForm">
-                <select id="jenis">
-                    <option value="hutang">Tambah Hutang</option>
-                    <option value="piutang">Tambah Piutang</option>
-                </select>
-                <input type="date" id="tanggal" required>
-                <input type="date" id="jatuh_tempo" required>
-                <input type="number" id="jumlah" placeholder="Jumlah (Nilai)" required>
-                <input type="text" id="keterangan" placeholder="Keterangan">
-                <button type="submit">SIMPAN</button>
-            </form>
-        </div>
-
-        <div id="data" class="screen" style="display:none">
-            <h3>Riwayat Transaksi</h3>
-            
-            <div class="search-box">
-                🔍 <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari keterangan...">
-            </div>
-
-            <div class="summary">
-                <p><strong>Hutang: <span id="totalHutang">Rp 0</span> | Piutang: <span id="totalPiutang">Rp 0</span></strong></p>
-            </div>
-            
-            <table id="mainTable">
-                <thead>
-                    <tr>
-                        <th>Tgl</th>
-                        <th>Jatuh Tempo</th>
-                        <th>Ket</th>
-                        <th>Nilai</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    </tbody>
-            </table>
-        </div>
-
-        <div id="backup" class="screen" style="display:none">
-            <h3>Backup Data</h3>
-            <button onclick="exportData()">Download Backup (JSON)</button>
-        </div>
+<div id="data" class="screen" style="display:none">
+    <h3>Riwayat Transaksi</h3>
+    
+    <div class="search-box">
+        🔍 <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari keterangan...">
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
+
+    <div class="summary">
+        <p><strong>Hutang: <span id="totalHutang">Rp 0</span> | Piutang: <span id="totalPiutang">Rp 0</span></strong></p>
+    </div>
+    
+    <table id="mainTable">
+        <thead>
+            <tr>
+                <th>Tgl</th>
+                <th>Jatuh Tempo</th>
+                <th>Ket</th>
+                <th>Nilai</th>
+                <th>Bayar</th>
+                <th>Sisa</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
+
+<div id="editModal" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%, -20%); background:white; padding:20px; border:2px solid #000; z-index:1000;">
+    <h4>Edit Pembayaran / Data</h4>
+    <input type="number" id="editBayar" placeholder="Masukkan Jumlah Bayar">
+    <button onclick="simpanEdit()">Update Bayar</button>
+    <button onclick="tutupEdit()">Batal</button>
+</div>
