@@ -11,9 +11,9 @@
         <h2>💰 Keuangan</h2>
         
         <div class="tabs">
-            <button class="btn-nav" onclick="openScreen('transaksi')">Transaksi</button>
-            <button class="btn-nav" onclick="openScreen('data')">Data</button>
-            <button class="btn-nav" onclick="openScreen('backup')">Backup</button>
+            <button onclick="openScreen('transaksi')">Transaksi</button>
+            <button onclick="openScreen('data')">Data</button>
+            <button onclick="openScreen('backup')">Backup</button>
         </div>
 
         <hr>
@@ -35,10 +35,13 @@
 
         <div id="data" class="screen" style="display:none">
             <h3>Riwayat Transaksi</h3>
-            <div id="ringkasan-saldo" style="margin-bottom: 10px; font-weight: bold;">
+            <input type="text" id="inputCari" onkeyup="tampilkanData()" placeholder="🔍 Cari keterangan..." class="custom-input">
+            
+            <div id="ringkasan-saldo" style="margin: 10px 0; font-weight: bold;">
                 Hutang: Rp <span id="totalHutang">0</span> | Piutang: Rp <span id="totalPiutang">0</span>
             </div>
-            <table border="1" style="width:100%; border-collapse: collapse;">
+
+            <table border="1" style="width:100%; border-collapse: collapse; font-size: 13px;">
                 <thead>
                     <tr>
                         <th>Tgl</th>
@@ -54,10 +57,11 @@
         </div>
 
         <div id="backup" class="screen" style="display:none">
-            <h3>Backup & Restore</h3>
-            <button onclick="exportData()">Download Backup (JSON)</button>
+            <h3>Backup Data</h3>
+            <button onclick="exportData()" class="btn-simpan">Download Backup (.json)</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
