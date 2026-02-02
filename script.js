@@ -1,117 +1,140 @@
-let currentEditIndex = null;
-
-// Navigasi Layar
+// 1. Fungsi Navigasi Layar
 function openScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
     const target = document.getElementById(id);
     if (target) {
         target.style.display = 'block';
-        if (id === 'data') tampilkanData();
+        if (id === 'data-hutang' || id === 'data-piutang') tampilkanData();
     }
 }
 
-// Simpan Data
+// 2. Fungsi Format Tanggal (Tgl-Bln-Thn)
+function formatTgl(tgl) {
+    if (!tgl || tgl === '-') return '-';
+    const parts = tgl.split('-');
+    return parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : tgl;
+}
+
+// 3. Simpan Data Baru
 document.getElementById('financeForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const data = {
-        id: Date.now(),
         jenis: document.getElementById('jenis').value,
         tanggal: document.getElementById('tanggal').value,
         jatuh_tempo: document.getElementById('jatuh_tempo').value || '-',
         jumlah: parseFloat(document.getElementById('jumlah').value),
         bayar: 0,
-        keterangan: document.getElementById('keterangan').value,
-        riwayat: []
+        metode: '',
+        tgl_bayar: '',
+        keterangan: document.getElementById('keterangan').value
     };
+    
     let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
     list.push(data);
     localStorage.setItem('data_keuangan', JSON.stringify(list));
-    alert("Tersimpan!");
+    
+    alert("Data Berhasil Disimpan!");
     this.reset();
-    openScreen('data');
+    openScreen(data.jenis === 'hutang' ? 'data-hutang' : 'data-piutang');
 });
 
-// Tampilkan Data + Sisa Biru + Tgl di Kolom Bayar
+// 4. Tampilkan Data ke Tabel (Warna Merah + Ket Bayar)
 function tampilkanData() {
-    const tbody = document.getElementById('tbody-data');
-    if (!tbody) return;
     let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
-    tbody.innerHTML = '';
-    let tH = 0, tP = 0;
+    const tbodyH = document.getElementById('tbody-hutang');
+    const tbodyP = document.getElementById('tbody-piutang');
+    
+    if (tbodyH) tbodyH.innerHTML = '';
+    if (tbodyP) tbodyP.innerHTML = '';
+    
+    let totalH = 0, totalP = 0;
     const hariIni = new Date().setHours(0,0,0,0);
 
     list.forEach((item, index) => {
-        const sisa = item.jumlah - item.bayar;
-        if (item.jenis === 'hutang') tH += sisa; else tP += sisa;
-
-        // Warna Merah Jatuh Tempo
-        let styleJT = "";
-        if (item.jatuh_tempo !== '-') {
-            if (new Date(item.jatuh_tempo) <= hariIni && sisa > 0) styleJT = "color:red; font-weight:bold;";
+        const sisa = item.jumlah - (item.bayar || 0);
+        let styleTempo = "";
+        
+        // Logika warna merah jika telat tempo
+        if (item.jatuh_tempo !== "-" && sisa > 0) {
+            if (new Date(item.jatuh_tempo).getTime() < hariIni) {
+                styleTempo = "color:red; font-weight:bold;";
+            }
         }
 
-        // List Tanggal di bawah tombol bayar
-        const riwayatList = item.riwayat.map(r => `<div style="font-size:9px; color:gray;">${r.tgl}: ${r.amt.toLocaleString()}</div>`).join('');
-
-        tbody.innerHTML += `
+        const barisHtml = `
             <tr>
-                <td>${item.tanggal}</td>
-                <td style="${styleJT}">${item.jatuh_tempo}</td>
-                <td style="max-width:100px; overflow:hidden;">${item.keterangan}</td>
-                <td>${item.jumlah.toLocaleString()}</td>
+                <td>${formatTgl(item.tanggal)}</td>
+                <td style="${styleTempo}">${formatTgl(item.jatuh_tempo)}</td>
                 <td>
-                    <button onclick="inputBayar(${index})">${item.bayar > 0 ? item.bayar.toLocaleString() : 'Bayar'}</button>
-                    ${riwayatList}
-                    <div style="color:blue; font-weight:bold; font-size:10px; margin-top:2px;">Sisa: ${sisa.toLocaleString()}</div>
+                    ${item.keterangan}
+                    ${item.metode ? `<br><small style="color:blue;"><i>(${item.metode} - ${item.tgl_bayar})</i></small>` : ''}
                 </td>
-                <td><button onclick="hapusData(${index})" style="background:red; color:white; border:none;">X</button></td>
+                <td>${item.jumlah.toLocaleString('id-ID')}</td>
+                <td align="center">
+                    <button onclick="inputBayar(${index})" style="background:#007bff; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Bayar</button>
+                    <div style="font-size:10px; margin-top:3px; font-weight:bold;">Sisa: ${sisa.toLocaleString('id-ID')}</div>
+                </td>
+                <td align="center">
+                    <button onclick="hapusData(${index})" style="background:red; color:white; border:none; padding:4px 8px; border-radius:3px;">X</button>
+                </td>
             </tr>`;
+
+        if (item.jenis === 'hutang' && tbodyH) {
+            tbodyH.innerHTML += barisHtml;
+            totalH += sisa;
+        } else if (item.jenis === 'piutang' && tbodyP) {
+            tbodyP.innerHTML += barisHtml;
+            totalP += sisa;
+        }
     });
-    document.getElementById('totalHutang').innerText = tH.toLocaleString();
-    document.getElementById('totalPiutang').innerText = tP.toLocaleString();
+
+    if (document.getElementById('totalHutang')) document.getElementById('totalHutang').innerText = totalH.toLocaleString('id-ID');
+    if (document.getElementById('totalPiutang')) document.getElementById('totalPiutang').innerText = totalP.toLocaleString('id-ID');
 }
 
-// Fungsi Modal Pembayaran
+// 5. Fungsi Bayar (Metode + Tanggal)
 function inputBayar(index) {
-    currentEditIndex = index;
     let list = JSON.parse(localStorage.getItem('data_keuangan'));
-    let sisa = list[index].jumlah - list[index].bayar;
-    document.getElementById('nominalInput').value = sisa;
-    document.getElementById('tglBayarInput').valueAsDate = new Date();
-    document.getElementById('metodeInput').value = "Tunai";
-    document.getElementById('paymentModal').style.display = 'block';
-}
-
-function tutupModal() {
-    document.getElementById('paymentModal').style.display = 'none';
-}
-
-function prosesBayar() {
-    let list = JSON.parse(localStorage.getItem('data_keuangan'));
-    let nominal = parseFloat(document.getElementById('nominalInput').value);
-    let tgl = document.getElementById('tglBayarInput').value;
-    let metode = document.getElementById('metodeInput').value;
-
-    if (nominal && tgl) {
-        let d = tgl.split('-');
-        let tglFormat = `${d[2]}-${d[1]}-${d[0]}`;
+    const sisaSekarang = list[index].jumlah - (list[index].bayar || 0);
+    
+    let nominal = prompt(`Jumlah Pembayaran (Sisa: ${sisaSekarang.toLocaleString()}):`, sisaSekarang);
+    if (nominal) {
+        let met = prompt("Metode (Tunai/Transfer):", "Tunai");
+        let tglInput = prompt("Tanggal Bayar (Format: Tgl-Bln-Thn):", new Date().toLocaleDateString('id-ID').replace(/\//g, '-'));
         
-        // Rekam Riwayat & Update Keterangan
-        list[currentEditIndex].riwayat.push({ tgl: tglFormat, amt: nominal });
-        list[currentEditIndex].bayar += nominal;
-        list[currentEditIndex].keterangan += ` [${tglFormat}: ${metode} Rp${nominal.toLocaleString()}]`;
-
+        list[index].bayar = (list[index].bayar || 0) + parseFloat(nominal);
+        list[index].metode = met;
+        list[index].tgl_bayar = tglInput; // Simpan keterangan tanggal
+        
         localStorage.setItem('data_keuangan', JSON.stringify(list));
-        tutupModal();
         tampilkanData();
     }
 }
 
+// 6. Hapus & Backup
 function hapusData(i) {
-    if(confirm("Hapus?")) {
+    if(confirm("Hapus data ini?")) {
         let list = JSON.parse(localStorage.getItem('data_keuangan'));
         list.splice(i, 1);
         localStorage.setItem('data_keuangan', JSON.stringify(list));
         tampilkanData();
     }
-        }
+}
+
+function eksporData() {
+    const data = localStorage.getItem('data_keuangan');
+    const blob = new Blob([data], {type: "application/json"});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "backup_keuangan.json";
+    a.click();
+}
+
+function imporData() {
+    try {
+        const txt = document.getElementById('importDataText').value;
+        localStorage.setItem('data_keuangan', JSON.stringify(JSON.parse(txt)));
+        alert("Data Berhasil Dipulihkan!");
+        location.reload();
+    } catch(e) { alert("Gagal! Format salah."); }
+            }
