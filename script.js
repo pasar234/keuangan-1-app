@@ -27,7 +27,7 @@ document.getElementById('financeForm').addEventListener('submit', function(e) {
     let list = JSON.parse(localStorage.getItem('data_keuangan')) || [];
     list.push(data);
     localStorage.setItem('data_keuangan', JSON.stringify(list));
-    alert("Data Berhasil Disimpan!");
+    alert("Berhasil Disimpan!");
     this.reset();
     openScreen(data.jenis === 'hutang' ? 'data-hutang' : 'data-piutang');
 });
@@ -45,14 +45,11 @@ function tampilkanData() {
     list.forEach((item, index) => {
         const sisa = item.jumlah - (item.bayar || 0);
         let styleTempo = "";
-        
         if (item.jatuh_tempo !== "-" && sisa > 0) {
-            if (new Date(item.jatuh_tempo).getTime() < hariIni) {
-                styleTempo = "color:red; font-weight:bold;";
-            }
+            if (new Date(item.jatuh_tempo).getTime() < hariIni) styleTempo = "color:red; font-weight:bold;";
         }
 
-        const barisHtml = `
+        const baris = `
             <tr>
                 <td>${formatTgl(item.tanggal)}</td>
                 <td style="${styleTempo}">${formatTgl(item.jatuh_tempo)}</td>
@@ -62,36 +59,35 @@ function tampilkanData() {
                 </td>
                 <td>${item.jumlah.toLocaleString('id-ID')}</td>
                 <td align="center">
-                    <button onclick="inputBayar(${index})" style="background:#007bff; color:white; border:none; padding:4px 8px; border-radius:3px;">Bayar</button>
-                    <div style="font-size:10px; margin-top:3px; font-weight:bold;">Sisa: ${sisa.toLocaleString('id-ID')}</div>
+                    <button onclick="inputBayar(${index})" style="background:#007bff; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Bayar</button>
+                    <div style="font-size:10px; font-weight:bold; margin-top:2px;">Sisa: ${sisa.toLocaleString('id-ID')}</div>
                 </td>
-                <td align="center">
-                    <button onclick="hapusData(${index})" style="background:red; color:white; border:none; padding:4px 8px; border-radius:3px;">X</button>
-                </td>
+                <td align="center"><button onclick="hapusData(${index})" style="background:red; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">X</button></td>
             </tr>`;
 
-        if (item.jenis === 'hutang') { tbodyH.innerHTML += barisHtml; totalH += sisa; } 
-        else { tbodyP.innerHTML += barisHtml; totalP += sisa; }
+        if (item.jenis === 'hutang') { tbodyH.innerHTML += baris; totalH += sisa; }
+        else { tbodyP.innerHTML += baris; totalP += sisa; }
     });
-
     document.getElementById('totalHutang').innerText = totalH.toLocaleString('id-ID');
     document.getElementById('totalPiutang').innerText = totalP.toLocaleString('id-ID');
 }
 
 function inputBayar(index) {
     let list = JSON.parse(localStorage.getItem('data_keuangan'));
-    const sisaSekarang = list[index].jumlah - (list[index].bayar || 0);
+    const sisa = list[index].jumlah - (list[index].bayar || 0);
     
-    let nominal = prompt(`Jumlah Pembayaran (Sisa: ${sisaSekarang.toLocaleString()}):`, sisaSekarang);
+    let nominal = prompt(`Jumlah Pembayaran (Sisa: ${sisa.toLocaleString()}):`, sisa);
     if (nominal) {
-        let met = prompt("Metode & Nama (Contoh: Tunai Marlon / Transfer Vr):", "Tunai");
-        let tglInput = prompt("Tanggal Bayar (Tgl-Bln-Thn):", new Date().toLocaleDateString('id-ID').replace(/\//g, '-'));
+        let met = prompt("Metode/Nama (Contoh: Tunai vv / Transfer Vr):", "Tunai");
+        let tgl = prompt("Tanggal Bayar (Tgl-Bln-Thn):", new Date().toLocaleDateString('id-ID').replace(/\//g, '-'));
         
-        let catatanBaru = `${met} ${tglInput}`;
+        // Format catatan: Metode Nama - Nominal - Tanggal
+        let catatan = `${met} ${parseFloat(nominal).toLocaleString('id-ID')} ${tgl}`;
+        
         if (!list[index].riwayat_bayar) {
-            list[index].riwayat_bayar = catatanBaru;
+            list[index].riwayat_bayar = catatan;
         } else {
-            list[index].riwayat_bayar += `, lanjut ${catatanBaru}`;
+            list[index].riwayat_bayar += `, lanjut ${catatan}`;
         }
         
         list[index].bayar += parseFloat(nominal);
@@ -100,29 +96,6 @@ function inputBayar(index) {
     }
 }
 
-function hapusData(i) {
-    if(confirm("Hapus data ini?")) {
-        let list = JSON.parse(localStorage.getItem('data_keuangan'));
-        list.splice(i, 1);
-        localStorage.setItem('data_keuangan', JSON.stringify(list));
-        tampilkanData();
-    }
-}
-
-function eksporData() {
-    const data = localStorage.getItem('data_keuangan');
-    const blob = new Blob([data], {type: "application/json"});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = "backup_keuangan.json";
-    a.click();
-}
-
-function imporData() {
-    try {
-        const txt = document.getElementById('importDataText').value;
-        localStorage.setItem('data_keuangan', JSON.stringify(JSON.parse(txt)));
-        alert("Data Berhasil Dipulihkan!");
-        location.reload();
-    } catch(e) { alert("Format data salah!"); }
-        }
+function hapusData(i) { if(confirm("Hapus?")) { let list = JSON.parse(localStorage.getItem('data_keuangan')); list.splice(i, 1); localStorage.setItem('data_keuangan', JSON.stringify(list)); tampilkanData(); } }
+function eksporData() { const blob = new Blob([localStorage.getItem('data_keuangan')], {type: "application/json"}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "backup.json"; a.click(); }
+function imporData() { try { const txt = document.getElementById('importDataText').value; localStorage.setItem('data_keuangan', JSON.stringify(JSON.parse(txt))); alert("Sukses!"); location.reload(); } catch(e) { alert("Format Error!"); } }
