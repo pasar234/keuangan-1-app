@@ -1,1 +1,683 @@
-<!DOCTYPE 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aplikasi Keuangan Mobile</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" type="image/png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Keuangan">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+    <meta name="theme-color" content="#764ba2">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #333;
+            touch-action: manipulation;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            min-height: 90vh;
+            position: relative;
+        }
+
+        /* Header Styles */
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .app-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #f5f5f5;
+            padding: 1px;
+            border-bottom: 2px solid #f5f5f5;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            padding: 15px 5px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 0;
+            margin: 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            font-weight: 700;
+        }
+
+        .nav-btn:active {
+            background: #f0f0f0;
+            transform: scale(0.98);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            display: block;
+        }
+
+        /* Screen Styles */
+        .screen {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+            min-height: 400px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: #f8f9fa;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Button Styles */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: block;
+            touch-action: manipulation;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        /* Summary Cards */
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .summary-title {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .summary-amount {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 12px;
+            border: 2px solid #f0f0f0;
+            margin-top: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 400px;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            padding: 15px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid #e0e0e0;
+            text-align: left;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-unpaid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-overdue {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 2px;
+            touch-action: manipulation;
+        }
+
+        .action-btn.pay {
+            background: #28a745;
+            color: white;
+        }
+
+        .action-btn.delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Payment History - Diperbarui */
+        .payment-history {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 11px;
+            border-left: 3px solid #28a745;
+        }
+
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dashed #ddd;
+            align-items: center;
+        }
+
+        .payment-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .payment-date {
+            font-size: 10px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .payment-method {
+            font-size: 10px;
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .payment-amount {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 12px;
+        }
+
+        /* Backup Screen */
+        .backup-actions {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .backup-textarea {
+            min-height: 150px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        @keyframes slideUp {
+            from { bottom: -100px; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .app-container {
+                min-height: 95vh;
+                border-radius: 15px;
+            }
+            
+            .app-header {
+                padding: 20px 15px;
+            }
+            
+            .app-title {
+                font-size: 20px;
+            }
+            
+            .nav-btn {
+                padding: 12px 3px;
+                font-size: 11px;
+                min-height: 55px;
+            }
+            
+            .nav-icon {
+                font-size: 16px;
+            }
+            
+            .screen {
+                padding: 15px;
+            }
+            
+            .form-input, .form-select, .form-textarea {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .btn {
+                padding: 16px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="app-header">
+            <div class="app-title">💰 Keuangan Mobile</div>
+            <div class="app-subtitle">Kelola hutang & piutang dengan mudah</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="showScreen('transaksi')">
+                <span class="nav-icon">➕</span>
+                <span>Tambah</span>
+            </button>
+            <button class="nav-btn" onclick="showScreen('hutang')">
+                <span class="nav-icon">📉</span>
+                <span>Hutang</span>
+            </button>
+            <button class="nav-btn" onclick="showScreen('piutang')">
+                <span class="nav-icon">📈</span>
+                <span>Piutang</span>
+            </button>
+            <button class="nav-btn" onclick="showScreen('backup')">
+                <span class="nav-icon">💾</span>
+                <span>Backup</span>
+            </button>
+        </div>
+
+        <!-- Add Transaction Screen -->
+        <div id="transaksi" class="screen active">
+            <h2 style="margin-bottom: 20px; color: #333;">Tambah Transaksi</h2>
+            
+            <form id="financeForm">
+                <div class="form-group">
+                    <label class="form-label">Jenis Transaksi</label>
+                    <select id="jenis" class="form-select">
+                        <option value="hutang">🏦 Saya Hutang (Pinjam)</option>
+                        <option value="piutang">👤 Saya Piutang (Dipinjam)</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" id="tanggal" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jatuh Tempo</label>
+                        <input type="date" id="jatuh_tempo" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Jumlah (Rp)</label>
+                    <input type="number" id="jumlah" class="form-input" placeholder="Masukkan jumlah" required min="1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Keterangan</label>
+                    <textarea id="keterangan" class="form-textarea" placeholder="Deskripsi transaksi..." rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    💾 Simpan Transaksi
+                </button>
+            </form>
+        </div>
+
+        <!-- Hutang Screen -->
+        <div id="hutang" class="screen">
+            <div class="summary-card">
+                <div class="summary-title">Total Hutang</div>
+                <div class="summary-amount">Rp <span id="totalHutang">0</span></div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Tempo</th>
+                            <th>Keterangan</th>
+                            <th>Jumlah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hutangTable">
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding:40px; color:#999;">
+                                Belum ada data hutang
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Piutang Screen -->
+        <div id="piutang" class="screen">
+            <div class="summary-card">
+                <div class="summary-title">Total Piutang</div>
+                <div class="summary-amount">Rp <span id="totalPiutang">0</span></div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Tempo</th>
+                            <th>Keterangan</th>
+                            <th>Jumlah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="piutangTable">
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding:40px; color:#999;">
+                                Belum ada data piutang
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Backup Screen -->
+        <div id="backup" class="screen">
+            <h2 style="margin-bottom: 20px; color: #333;">Backup & Restore</h2>
+            
+            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
+                Backup data keuangan Anda untuk mengamankan semua transaksi.
+            </p>
+
+            <div class="backup-actions">
+                <button onclick="exportData()" class="btn btn-primary">
+                    📥 Download Backup
+                </button>
+                
+                <div class="form-group">
+                    <label class="form-label">Restore Data (Paste JSON)</label>
+                    <textarea id="importData" class="form-textarea backup-textarea" 
+                              placeholder='Tempel data JSON backup di sini...'></textarea>
+                </div>
+                
+                <button onclick="importData()" class="btn btn-secondary">
+                    🔄 Restore Data
+                </button>
+
+                <div style="margin-top: 20px;">
+                    <label class="form-label">Atau upload file JSON:</label>
+                    <input type="file" id="fileInput" accept=".json" class="form-input"
+                           onchange="restoreFromFile(event)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" style="display: none;"></div>
+
+    <script>
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set tanggal default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tanggal').value = today;
+            
+            // Load data
+            loadData();
+            
+            // Event listeners
+            setupEventListeners();
+            
+            console.log("Aplikasi siap digunakan!");
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Form submission
+            document.getElementById('financeForm').addEventListener('submit', handleFormSubmit);
+            
+            // Auto-save form draft
+            const formInputs = document.querySelectorAll('#financeForm input, #financeForm textarea, #financeForm select');
+            formInputs.forEach(input => {
+                input.addEventListener('input', saveFormDraft);
+            });
+            
+            // Load form draft
+            loadFormDraft();
+        }
+
+        // Navigasi antar screen
+        function showScreen(screenId) {
+            console.log("Menampilkan screen:", screenId);
+            
+            // Update active nav button
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.r
