@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Keuangan Mobile</title>
+    <title>Keuangan Mobile</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" type="image/png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Keuangan">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
     <meta name="theme-color" content="#764ba2">
     <style>
-        /* Reset & Base Styles */
+        /* RESET & BASE */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,76 +16,73 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 15px;
+            padding: 10px;
             color: #333;
             touch-action: manipulation;
         }
 
         .app-container {
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 100%;
             background: white;
-            border-radius: 20px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            min-height: 90vh;
-            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 95vh;
         }
 
-        /* Header Styles */
+        /* HEADER */
         .app-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px 20px;
+            padding: 20px 15px;
             text-align: center;
-            position: relative;
         }
 
         .app-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             margin-bottom: 5px;
         }
 
         .app-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
         }
 
-        /* Navigation Tabs */
+        /* NAVIGASI TABS - FIXED */
         .nav-tabs {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1px;
-            background: #f5f5f5;
+            background: #e0e0e0;
             padding: 1px;
-            border-bottom: 2px solid #f5f5f5;
+            position: relative;
+            z-index: 10;
         }
 
         .nav-btn {
             background: white;
             border: none;
-            padding: 15px 5px;
-            font-size: 12px;
+            padding: 12px 5px;
+            font-size: 11px;
             font-weight: 600;
-            color: #555;
+            color: #666;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 0;
-            margin: 0;
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
             gap: 4px;
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .nav-btn.active {
-            background: white;
             color: #667eea;
             border-bottom: 3px solid #667eea;
             font-weight: 700;
@@ -102,127 +94,94 @@
         }
 
         .nav-icon {
-            font-size: 18px;
+            font-size: 16px;
             display: block;
         }
 
-        /* Screen Styles */
+        /* SCREENS */
         .screen {
             display: none;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-            min-height: 400px;
+            padding: 15px;
+            min-height: 300px;
         }
 
         .screen.active {
             display: block;
+            animation: fadeIn 0.3s;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        /* Form Styles */
+        /* FORM */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-label {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #555;
         }
 
         .form-input, .form-select, .form-textarea {
             width: 100%;
-            padding: 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
             background: #f8f9fa;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 10px;
         }
 
-        /* Button Styles */
+        /* BUTTON */
         .btn {
             width: 100%;
-            padding: 18px;
+            padding: 15px;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: block;
-            touch-action: manipulation;
-        }
-
-        .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            margin-top: 10px;
         }
 
-        .btn-primary:active {
-            transform: scale(0.98);
-            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #555;
-        }
-
-        .btn-secondary:active {
+        .btn:active {
             transform: scale(0.98);
         }
 
-        /* Summary Cards */
+        /* SUMMARY CARD */
         .summary-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .summary-title {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 5px;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
         .summary-amount {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
         }
 
-        /* Table Styles */
+        /* TABLE */
         .table-container {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-radius: 12px;
-            border: 2px solid #f0f0f0;
-            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-top: 15px;
         }
 
         .data-table {
@@ -232,65 +191,28 @@
         }
 
         .data-table th {
-            background: #f8f9fa;
-            padding: 15px 10px;
-            font-size: 12px;
+            background: #f5f5f5;
+            padding: 10px;
+            font-size: 11px;
             font-weight: 600;
-            color: #555;
-            border-bottom: 2px solid #e0e0e0;
             text-align: left;
-            position: sticky;
-            top: 0;
         }
 
         .data-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
-            vertical-align: top;
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* Status Badges */
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .status-paid {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-unpaid {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .status-overdue {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        /* Action Buttons */
-        .action-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 8px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
             font-size: 13px;
+        }
+
+        /* ACTION BUTTONS */
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-block;
             margin: 2px;
-            touch-action: manipulation;
         }
 
         .action-btn.pay {
@@ -303,84 +225,28 @@
             color: white;
         }
 
-        .action-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Payment History - Diperbarui */
+        /* RIWAYAT BAYAR */
         .payment-history {
-            margin-top: 10px;
-            padding: 10px;
+            margin-top: 8px;
+            padding: 8px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 11px;
-            border-left: 3px solid #28a745;
         }
 
         .payment-item {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
+            padding: 4px 0;
             border-bottom: 1px dashed #ddd;
-            align-items: center;
-        }
-
-        .payment-item:last-child {
-            border-bottom: none;
-        }
-
-        .payment-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
         }
 
         .payment-date {
             font-size: 10px;
             color: #666;
-            font-weight: 500;
         }
 
-        .payment-method {
-            font-size: 10px;
-            color: #007bff;
-            font-weight: 600;
-        }
-
-        .payment-amount {
-            font-weight: 700;
-            color: #28a745;
-            font-size: 12px;
-        }
-
-        /* Backup Screen */
-        .backup-actions {
-            display: grid;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .backup-textarea {
-            min-height: 150px;
-            font-family: monospace;
-            font-size: 14px;
-            resize: vertical;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        /* Toast Notification */
+        /* TOAST */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -388,131 +254,46 @@
             transform: translateX(-50%);
             background: #333;
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            border-radius: 8px;
             z-index: 1000;
-            animation: slideUp 0.3s ease;
             max-width: 90%;
             text-align: center;
-        }
-
-        @keyframes slideUp {
-            from { bottom: -100px; opacity: 0; }
-            to { bottom: 20px; opacity: 1; }
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
-            .app-container {
-                min-height: 95vh;
-                border-radius: 15px;
-            }
-            
-            .app-header {
-                padding: 20px 15px;
-            }
-            
-            .app-title {
-                font-size: 20px;
-            }
-            
-            .nav-btn {
-                padding: 12px 3px;
-                font-size: 11px;
-                min-height: 55px;
-            }
-            
-            .nav-icon {
-                font-size: 16px;
-            }
-            
-            .screen {
-                padding: 15px;
-            }
-            
-            .form-input, .form-select, .form-textarea {
-                padding: 14px;
-                font-size: 16px;
-            }
-            
-            .btn {
-                padding: 16px;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
+        <!-- HEADER -->
         <div class="app-header">
             <div class="app-title">💰 Keuangan Mobile</div>
             <div class="app-subtitle">Kelola hutang & piutang dengan mudah</div>
         </div>
 
-        <!-- Navigation -->
-        <div class="nav-tabs">
-            <button class="nav-btn active" onclick="showScreen('transaksi')">
+        <!-- NAVIGASI - SEMUA TAB BISA DIKLIK -->
+        <div class="nav-tabs" id="navTabs">
+            <button class="nav-btn active" data-target="transaksi">
                 <span class="nav-icon">➕</span>
                 <span>Tambah</span>
             </button>
-            <button class="nav-btn" onclick="showScreen('hutang')">
+            <button class="nav-btn" data-target="hutang">
                 <span class="nav-icon">📉</span>
                 <span>Hutang</span>
             </button>
-            <button class="nav-btn" onclick="showScreen('piutang')">
+            <button class="nav-btn" data-target="piutang">
                 <span class="nav-icon">📈</span>
                 <span>Piutang</span>
             </button>
-            <button class="nav-btn" onclick="showScreen('backup')">
+            <button class="nav-btn" data-target="backup">
                 <span class="nav-icon">💾</span>
                 <span>Backup</span>
             </button>
         </div>
 
-        <!-- Add Transaction Screen -->
+        <!-- SCREEN: TAMBAH TRANSAKSI -->
         <div id="transaksi" class="screen active">
-            <h2 style="margin-bottom: 20px; color: #333;">Tambah Transaksi</h2>
+            <h2 style="margin-bottom: 15px; font-size: 18px;">Tambah Transaksi</h2>
             
             <form id="financeForm">
                 <div class="form-group">
@@ -536,24 +317,24 @@
 
                 <div class="form-group">
                     <label class="form-label">Jumlah (Rp)</label>
-                    <input type="number" id="jumlah" class="form-input" placeholder="Masukkan jumlah" required min="1">
+                    <input type="number" id="jumlah" class="form-input" placeholder="Contoh: 50000" required min="1">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Keterangan</label>
-                    <textarea id="keterangan" class="form-textarea" placeholder="Deskripsi transaksi..." rows="3"></textarea>
+                    <textarea id="keterangan" class="form-textarea" placeholder="Deskripsi transaksi..." rows="2"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn">
                     💾 Simpan Transaksi
                 </button>
             </form>
         </div>
 
-        <!-- Hutang Screen -->
+        <!-- SCREEN: DAFTAR HUTANG -->
         <div id="hutang" class="screen">
             <div class="summary-card">
-                <div class="summary-title">Total Hutang</div>
+                <div style="font-size: 13px; opacity: 0.9;">Total Hutang</div>
                 <div class="summary-amount">Rp <span id="totalHutang">0</span></div>
             </div>
 
@@ -570,7 +351,7 @@
                     </thead>
                     <tbody id="hutangTable">
                         <tr>
-                            <td colspan="5" style="text-align:center; padding:40px; color:#999;">
+                            <td colspan="5" style="text-align:center; padding:30px; color:#999; font-size: 13px;">
                                 Belum ada data hutang
                             </td>
                         </tr>
@@ -579,10 +360,10 @@
             </div>
         </div>
 
-        <!-- Piutang Screen -->
+        <!-- SCREEN: DAFTAR PIUTANG -->
         <div id="piutang" class="screen">
             <div class="summary-card">
-                <div class="summary-title">Total Piutang</div>
+                <div style="font-size: 13px; opacity: 0.9;">Total Piutang</div>
                 <div class="summary-amount">Rp <span id="totalPiutang">0</span></div>
             </div>
 
@@ -599,7 +380,7 @@
                     </thead>
                     <tbody id="piutangTable">
                         <tr>
-                            <td colspan="5" style="text-align:center; padding:40px; color:#999;">
+                            <td colspan="5" style="text-align:center; padding:30px; color:#999; font-size: 13px;">
                                 Belum ada data piutang
                             </td>
                         </tr>
@@ -608,76 +389,524 @@
             </div>
         </div>
 
-        <!-- Backup Screen -->
+        <!-- SCREEN: BACKUP & RESTORE -->
         <div id="backup" class="screen">
-            <h2 style="margin-bottom: 20px; color: #333;">Backup & Restore</h2>
+            <h2 style="margin-bottom: 15px; font-size: 18px;">Backup & Restore</h2>
             
-            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
-                Backup data keuangan Anda untuk mengamankan semua transaksi.
+            <p style="margin-bottom: 15px; color: #666; font-size: 13px;">
+                Backup data keuangan Anda untuk keamanan.
             </p>
 
-            <div class="backup-actions">
-                <button onclick="exportData()" class="btn btn-primary">
-                    📥 Download Backup
-                </button>
-                
-                <div class="form-group">
-                    <label class="form-label">Restore Data (Paste JSON)</label>
-                    <textarea id="importData" class="form-textarea backup-textarea" 
-                              placeholder='Tempel data JSON backup di sini...'></textarea>
-                </div>
-                
-                <button onclick="importData()" class="btn btn-secondary">
-                    🔄 Restore Data
-                </button>
+            <button onclick="exportData()" class="btn" style="margin-bottom: 15px;">
+                📥 Download Backup
+            </button>
+            
+            <div class="form-group">
+                <label class="form-label">Restore Data (Paste JSON)</label>
+                <textarea id="importData" class="form-textarea" rows="4" placeholder='Tempel data JSON backup di sini...'></textarea>
+            </div>
+            
+            <button onclick="importData()" class="btn" style="background: #6c757d;">
+                🔄 Restore Data
+            </button>
 
-                <div style="margin-top: 20px;">
-                    <label class="form-label">Atau upload file JSON:</label>
-                    <input type="file" id="fileInput" accept=".json" class="form-input"
-                           onchange="restoreFromFile(event)">
-                </div>
+            <div style="margin-top: 15px;">
+                <label class="form-label">Atau upload file JSON:</label>
+                <input type="file" id="fileInput" accept=".json" class="form-input"
+                       onchange="restoreFromFile(event)">
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast" style="display: none;"></div>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast"></div>
 
     <script>
-        // Inisialisasi
+        // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Aplikasi dimuat...');
+            
             // Set tanggal default
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('tanggal').value = today;
             
-            // Load data
+            // Setup navigation
+            setupNavigation();
+            
+            // Setup form
+            setupForm();
+            
+            // Load data awal
             loadData();
             
-            // Event listeners
-            setupEventListeners();
-            
-            console.log("Aplikasi siap digunakan!");
+            console.log('Aplikasi siap! Semua tab bisa diklik.');
         });
 
-        // Setup event listeners
-        function setupEventListeners() {
-            // Form submission
-            document.getElementById('financeForm').addEventListener('submit', handleFormSubmit);
+        // ==================== NAVIGASI - FIXED ====================
+        function setupNavigation() {
+            const navButtons = document.querySelectorAll('.nav-btn');
             
-            // Auto-save form draft
-            const formInputs = document.querySelectorAll('#financeForm input, #financeForm textarea, #financeForm select');
-            formInputs.forEach(input => {
-                input.addEventListener('input', saveFormDraft);
+            navButtons.forEach(button => {
+                // Pastikan event listener ditambahkan dengan benar
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const targetId = this.getAttribute('data-target');
+                    console.log('Klik tab:', targetId);
+                    
+                    // Update active button
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show target screen
+                    showScreen(targetId);
+                });
+                
+                // Tambah event untuk touch devices
+                button.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '0.7';
+                });
+                
+                button.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '1';
+                    const targetId = this.getAttribute('data-target');
+                    showScreen(targetId);
+                });
             });
-            
-            // Load form draft
-            loadFormDraft();
         }
 
-        // Navigasi antar screen
         function showScreen(screenId) {
-            console.log("Menampilkan screen:", screenId);
+            console.log('Menampilkan screen:', screenId);
             
-            // Update active nav button
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.r
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show target screen
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                
+                // Load data jika screen hutang/piutang
+                if (screenId === 'hutang' || screenId === 'piutang') {
+                    setTimeout(loadData, 50);
+                }
+            }
+        }
+
+        // ==================== FORM HANDLING ====================
+        function setupForm() {
+            const form = document.getElementById('financeForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const transaction = {
+                    id: Date.now(),
+                    jenis: document.getElementById('jenis').value,
+                    tanggal: document.getElementById('tanggal').value,
+                    jatuh_tempo: document.getElementById('jatuh_tempo').value || '-',
+                    jumlah: parseFloat(document.getElementById('jumlah').value),
+                    bayar: 0,
+                    riwayat_bayar: [],
+                    keterangan: document.getElementById('keterangan').value || '-',
+                    created_at: new Date().toISOString()
+                };
+                
+                // Validasi
+                if (!transaction.jumlah || transaction.jumlah <= 0) {
+                    showToast('Jumlah harus lebih dari 0', 'error');
+                    return;
+                }
+                
+                // Simpan ke localStorage
+                let transactions = JSON.parse(localStorage.getItem('keuangan_data')) || [];
+                transactions.push(transaction);
+                localStorage.setItem('keuangan_data', JSON.stringify(transactions));
+                
+                // Reset form
+                this.reset();
+                document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+                
+                // Tampilkan notifikasi
+                showToast('✅ Transaksi berhasil disimpan!', 'success');
+                
+                // Navigasi ke screen yang sesuai
+                const targetScreen = transaction.jenis === 'hutang' ? 'hutang' : 'piutang';
+                setTimeout(() => showScreen(targetScreen), 500);
+            });
+        }
+
+        // ==================== DATA MANAGEMENT ====================
+        function formatDate(dateString) {
+            if (!dateString || dateString === '-') return '-';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function formatDateTime(dateString) {
+            if (!dateString || dateString === '-') return '-';
+            try {
+                const date = new Date(dateString);
+                const now = new Date();
+                const isToday = date.toDateString() === now.toDateString();
+                
+                if (isToday) {
+                    return date.toLocaleTimeString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) + ' (Hari ini)';
+                }
+                
+                return date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID').format(amount);
+        }
+
+        function loadData() {
+            try {
+                const transactions = JSON.parse(localStorage.getItem('keuangan_data')) || [];
+                const now = new Date();
+                
+                // Hitung totals
+                let totalHutang = 0;
+                let totalPiutang = 0;
+                
+                // Render hutang
+                const hutangData = transactions.filter(t => t.jenis === 'hutang');
+                const hutangTable = document.getElementById('hutangTable');
+                
+                if (hutangData.length === 0) {
+                    hutangTable.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding:30px; color:#999; font-size: 13px;">
+                                Belum ada data hutang
+                            </td>
+                        </tr>`;
+                } else {
+                    hutangTable.innerHTML = '';
+                    
+                    hutangData.forEach(transaction => {
+                        const sisa = transaction.jumlah - (transaction.bayar || 0);
+                        totalHutang += sisa;
+                        
+                        const isOverdue = transaction.jatuh_tempo !== '-' && 
+                                         new Date(transaction.jatuh_tempo) < now && 
+                                         sisa > 0;
+                        
+                        const sortedRiwayat = (transaction.riwayat_bayar || [])
+                            .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${formatDate(transaction.tanggal)}</td>
+                            <td>
+                                ${formatDate(transaction.jatuh_tempo)}
+                                ${isOverdue ? '<span style="color:red; font-size:10px;">TELAT</span>' : ''}
+                            </td>
+                            <td>
+                                <strong>${transaction.keterangan}</strong>
+                                ${sortedRiwayat.length > 0 ? 
+                                    `<div class="payment-history">
+                                        ${sortedRiwayat.map(payment => 
+                                            `<div class="payment-item">
+                                                <span class="payment-date">${formatDateTime(payment.tanggal)} - ${payment.metode || 'Bayar'}</span>
+                                                <span style="color:green; font-weight:bold;">Rp ${formatCurrency(payment.nominal || 0)}</span>
+                                            </div>`
+                                        ).join('')}
+                                    </div>` : ''
+                                }
+                            </td>
+                            <td>
+                                <div>Rp ${formatCurrency(transaction.jumlah)}</div>
+                                <div style="font-size:11px; color:#666;">
+                                    Sisa: Rp ${formatCurrency(sisa)}
+                                </div>
+                            </td>
+                            <td>
+                                ${sisa > 0 ? 
+                                    `<button class="action-btn pay" onclick="addPayment(${transaction.id})">Bayar</button>` : 
+                                    '<span style="background:#d4edda; color:#155724; padding:3px 8px; border-radius:3px; font-size:10px;">LUNAS</span>'
+                                }
+                                <br>
+                                <button class="action-btn delete" onclick="deleteTransaction(${transaction.id})" style="margin-top:5px;">Hapus</button>
+                            </td>
+                        `;
+                        hutangTable.appendChild(row);
+                    });
+                }
+                
+                // Render piutang
+                const piutangData = transactions.filter(t => t.jenis === 'piutang');
+                const piutangTable = document.getElementById('piutangTable');
+                
+                if (piutangData.length === 0) {
+                    piutangTable.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding:30px; color:#999; font-size: 13px;">
+                                Belum ada data piutang
+                            </td>
+                        </tr>`;
+                } else {
+                    piutangTable.innerHTML = '';
+                    
+                    piutangData.forEach(transaction => {
+                        const sisa = transaction.jumlah - (transaction.bayar || 0);
+                        totalPiutang += sisa;
+                        
+                        const isOverdue = transaction.jatuh_tempo !== '-' && 
+                                         new Date(transaction.jatuh_tempo) < now && 
+                                         sisa > 0;
+                        
+                        const sortedRiwayat = (transaction.riwayat_bayar || [])
+                            .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${formatDate(transaction.tanggal)}</td>
+                            <td>
+                                ${formatDate(transaction.jatuh_tempo)}
+                                ${isOverdue ? '<span style="color:red; font-size:10px;">TELAT</span>' : ''}
+                            </td>
+                            <td>
+                                <strong>${transaction.keterangan}</strong>
+                                ${sortedRiwayat.length > 0 ? 
+                                    `<div class="payment-history">
+                                        ${sortedRiwayat.map(payment => 
+                                            `<div class="payment-item">
+                                                <span class="payment-date">${formatDateTime(payment.tanggal)} - ${payment.metode || 'Terima'}</span>
+                                                <span style="color:green; font-weight:bold;">Rp ${formatCurrency(payment.nominal || 0)}</span>
+                                            </div>`
+                                        ).join('')}
+                                    </div>` : ''
+                                }
+                            </td>
+                            <td>
+                                <div>Rp ${formatCurrency(transaction.jumlah)}</div>
+                                <div style="font-size:11px; color:#666;">
+                                    Sisa: Rp ${formatCurrency(sisa)}
+                                </div>
+                            </td>
+                            <td>
+                                ${sisa > 0 ? 
+                                    `<button class="action-btn pay" onclick="addPayment(${transaction.id})">Terima</button>` : 
+                                    '<span style="background:#d4edda; color:#155724; padding:3px 8px; border-radius:3px; font-size:10px;">LUNAS</span>'
+                                }
+                                <br>
+                                <button class="action-btn delete" onclick="deleteTransaction(${transaction.id})" style="margin-top:5px;">Hapus</button>
+                            </td>
+                        `;
+                        piutangTable.appendChild(row);
+                    });
+                }
+                
+                // Update totals
+                document.getElementById('totalHutang').textContent = formatCurrency(totalHutang);
+                document.getElementById('totalPiutang').textContent = formatCurrency(totalPiutang);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function addPayment(transactionId) {
+            try {
+                const transactions = JSON.parse(localStorage.getItem('keuangan_data')) || [];
+                const transactionIndex = transactions.findIndex(t => t.id === transactionId);
+                
+                if (transactionIndex === -1) {
+                    showToast('Transaksi tidak ditemukan', 'error');
+                    return;
+                }
+                
+                const transaction = transactions[transactionIndex];
+                const sisa = transaction.jumlah - (transaction.bayar || 0);
+                
+                if (sisa <= 0) {
+                    showToast('Transaksi sudah lunas', 'info');
+                    return;
+                }
+                
+                const nominalInput = prompt(`Masukkan jumlah (Sisa: Rp ${formatCurrency(sisa)}):`, sisa);
+                if (!nominalInput) return;
+                
+                const nominal = parseFloat(nominalInput);
+                if (isNaN(nominal) || nominal <= 0) {
+                    showToast('Nominal tidak valid', 'error');
+                    return;
+                }
+                
+                if (nominal > sisa) {
+                    showToast('Nominal melebihi sisa', 'error');
+                    return;
+                }
+                
+                const metode = prompt('Metode pembayaran:', 'Tunai') || 'Tunai';
+                
+                if (!Array.isArray(transaction.riwayat_bayar)) {
+                    transaction.riwayat_bayar = [];
+                }
+                
+                transaction.riwayat_bayar.push({
+                    tanggal: new Date().toISOString(),
+                    nominal: nominal,
+                    metode: metode,
+                    waktu: new Date().toLocaleTimeString('id-ID')
+                });
+                
+                transaction.bayar = (transaction.bayar || 0) + nominal;
+                transactions[transactionIndex] = transaction;
+                localStorage.setItem('keuangan_data', JSON.stringify(transactions));
+                
+                showToast('✅ Pembayaran berhasil!', 'success');
+                setTimeout(loadData, 300);
+                
+            } catch (error) {
+                showToast('Error mencatat pembayaran', 'error');
+            }
+        }
+
+        function deleteTransaction(transactionId) {
+            if (!confirm('Hapus transaksi ini?')) return;
+            
+            try {
+                let transactions = JSON.parse(localStorage.getItem('keuangan_data')) || [];
+                transactions = transactions.filter(t => t.id !== transactionId);
+                localStorage.setItem('keuangan_data', JSON.stringify(transactions));
+                
+                showToast('✅ Transaksi dihapus', 'success');
+                setTimeout(loadData, 300);
+            } catch (error) {
+                showToast('Error menghapus', 'error');
+            }
+        }
+
+        // ==================== BACKUP & RESTORE ====================
+        function exportData() {
+            try {
+                const data = localStorage.getItem('keuangan_data') || '[]';
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `backup-keuangan-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showToast('✅ Backup berhasil!', 'success');
+            } catch (error) {
+                showToast('Error backup', 'error');
+            }
+        }
+
+        function importData() {
+            try {
+                const importText = document.getElementById('importData').value.trim();
+                
+                if (!importText) {
+                    showToast('Masukkan data JSON', 'error');
+                    return;
+                }
+                
+                const importedData = JSON.parse(importText);
+                
+                if (!Array.isArray(importedData)) {
+                    throw new Error('Format data tidak valid');
+                }
+                
+                localStorage.setItem('keuangan_data', JSON.stringify(importedData));
+                document.getElementById('importData').value = '';
+                
+                showToast('✅ Data berhasil dipulihkan!', 'success');
+                setTimeout(() => location.reload(), 1000);
+                
+            } catch (error) {
+                showToast('Format data tidak valid', 'error');
+            }
+        }
+
+        function restoreFromFile(event) {
+            try {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                if (!file.name.endsWith('.json')) {
+                    showToast('File harus .json', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (!Array.isArray(data)) {
+                            throw new Error('Format data tidak valid');
+                        }
+                        
+                        localStorage.setItem('keuangan_data', JSON.stringify(data));
+                        showToast('✅ Data berhasil dipulihkan!', 'success');
+                        
+                        setTimeout(() => location.reload(), 1000);
+                        
+                    } catch (error) {
+                        showToast('Format file tidak valid', 'error');
+                    }
+                };
+                reader.readAsText(file);
+                event.target.value = '';
+                
+            } catch (error) {
+                showToast('Error membaca file', 'error');
+            }
+        }
+
+        // ==================== UTILITIES ====================
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            toast.style.background = type === 'success' ? '#28a745' : 
+                                   type === 'error' ? '#dc3545' : '#333';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // ==================== PWA SUPPORT ====================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(() => console.log('Service Worker terdaftar'))
+                    .catch(err => console.log('Service Worker gagal:', err));
+            });
+        }
+    </script>
+</body>
+</html>
