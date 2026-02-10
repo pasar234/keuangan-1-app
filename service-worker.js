@@ -1,5 +1,5 @@
 // Service Worker sederhana
-const CACHE_NAME = 'keuangan-v1';
+const CACHE_NAME = 'keuangan-v1.1';
 
 self.addEventListener('install', event => {
   event.waitUntil(
