@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+    <title>Keuangan Pro - Warna Status Jatuh Tempo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            background: #f4f6fa;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            overflow-x: auto;
+        }
+
+        .app-wrapper {
+            min-width: 320px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #f4f6fa;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            width: 100%;
+            background: #ffffff;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+            flex-shrink: 0;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: #ffffff;
+            border-bottom: 1px solid #e9eef3;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: white;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 14px 5px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            color: #7c3aed;
+            border-bottom: 3px solid #7c3aed;
+            background: #faf5ff;
+        }
+
+        .screen {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 16px;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 100px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #edf2f7;
+            background: white;
+            margin-top: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 600px;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 700;
+            color: #334155;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-lunas {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .btn-small {
+            background: #7c3aed;
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: 0.1s;
+        }
+        .btn-small:active { transform: scale(0.96); }
+        .btn-small-outline {
+            background: #f1f5f9;
+            color: #b91c1c;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .hist-mini {
+            background: #fefce8;
+            padding: 8px;
+            border-radius: 16px;
+            font-size: 11px;
+            max-width: 220px;
+            white-space: normal;
+        }
+        .summary-box {
+            background: linear-gradient(115deg, #7c3aed 0%, #a855f7 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .summary-val { font-size: 28px; font-weight: 800; }
+        .search-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 40px;
+            margin-bottom: 18px;
+            font-size: 15px;
+            background: #f8fafc;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #334155; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 18px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 700;
+            background: #7c3aed;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        .btn-success { background: #10b981; }
+        .btn-outline { background: transparent; border: 2px solid #7c3aed; color: #7c3aed; }
+        #payModal, #restoreModal, #monthModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            backdrop-filter: blur(3px);
+        }
+        .modal-body {
+            background: white;
+            padding: 24px;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .month-list { display: flex; flex-direction: column; gap: 14px; }
+        .month-item { background: #ffffff; border-radius: 24px; padding: 18px; border: 1px solid #eef2ff; cursor: pointer; }
+        .month-title { font-size: 1.2rem; font-weight: 800; display: flex; justify-content: space-between; }
+        .month-stats-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+        .stat-chip { background: #f1f5f9; padding: 6px 14px; border-radius: 40px; font-size: 13px; font-weight: 600; }
+        .filter-chip { background: white; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 40px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .filter-chip.active-filter { background: #7c3aed; border-color: #7c3aed; color: white; }
+        .history-detail-item { border-bottom: 1px solid #f0f2f5; padding: 14px 0; display: flex; flex-wrap: wrap; justify-content: space-between; }
+        
+        /* Warna status nama hutang/piutang */
+        .status-lunas { color: #10b981; font-weight: 800; }
+        .status-terlambat { color: #dc2626; font-weight: 800; }
+        .status-normal { color: #1e293b; font-weight: 800; }
+        
+        @media (max-width: 600px) { .screen { padding-bottom: 120px; } .data-table td, .data-table th { padding: 12px 8px; } }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <div class="app-container">
+        <div class="app-header">💰 KEUANGAN PRO</div>
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="go('add', this)">TAMBAH</button>
+            <button class="nav-btn" onclick="go('h', this)">HUTANG</button>
+            <button class="nav-btn" onclick="go('p', this)">PIUTANG</button>
+            <button class="nav-btn" onclick="go('st', this)">SETTING</button>
+        </div>
+
+        <div id="add" class="screen active">
+            <form id="fForm">
+                <div class="form-group"><label class="form-label">Jenis</label><select id="jns" class="form-select"><option value="h">Hutang (saya berhutang)</option><option value="p">Piutang (orang berhutang ke saya)</option></select></div>
+                <div class="form-group"><label class="form-label">Tanggal Transaksi</label><input type="date" id="tgl" class="form-input" required></div>
+                <div class="form-group"><label class="form-label">Jatuh Tempo</label><input type="date" id="tmp" class="form-input"></div>
+                <div class="form-group"><label class="form-label">Nominal (Rp)</label><input type="number" id="nom" class="form-input" required placeholder="0"></div>
+                <div class="form-group"><label class="form-label">Nama / Keterangan</label><textarea id="ket" class="form-textarea" rows="2" required placeholder="Contoh: Pinjam ke Andi"></textarea></div>
+                <button type="submit" class="btn">💾 SIMPAN DATA</button>
+            </form>
+        </div>
+
+        <div id="h" class="screen">
+            <div class="summary-box"><p>💸 TOTAL SISA HUTANG</p><div class="summary-val" id="totH">Rp 0</div></div>
+            <input type="text" class="search-input" placeholder="🔍 Cari Nama atau Keterangan..." onkeyup="filterTable('h', this.value)">
+            <div class="table-container" id="tableHContainer"></div>
+        </div>
+
+        <div id="p" class="screen">
+            <div class="summary-box" style="background:linear-gradient(115deg, #059669 0%, #10b981 100%);"><p>📈 TOTAL SISA PIUTANG</p><div class="summary-val" id="totP">Rp 0</div></div>
+            <input type="text" class="search-input" placeholder="🔍 Cari Nama atau Keterangan..." onkeyup="filterTable('p', this.value)">
+            <div class="table-container" id="tablePContainer"></div>
+        </div>
+
+        <div id="st" class="screen">
+            <div class="card" style="text-align:center; background: #fefce8; border-radius:28px; padding:20px; margin-bottom:20px;">
+                <h3>📋 Backup & Restore</h3>
+                <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
+                    <button onclick="simpleBackup()" class="btn" style="background:#3b82f6; margin:0;">📋 SALIN DATA</button>
+                    <button onclick="openRestoreModal()" class="btn btn-outline" style="margin:0;">📥 RESTORE</button>
+                </div>
+            </div>
+            <div class="card" style="border-radius:28px; padding:16px; background:white;">
+                <h3 style="margin-bottom:16px;">📆 Riwayat Bulanan + Pencarian</h3>
+                <div class="history-search-area" style="margin-bottom:20px;">
+                    <input type="text" id="monthSearchInput" class="search-input" placeholder="🔍 Cari nama / keterangan..." onkeyup="filterMonthlyHistory()">
+                    <div class="filter-group" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                        <span class="filter-chip active-filter" data-filter="all">Semua</span>
+                        <span class="filter-chip" data-filter="hutang">Hutang</span>
+                        <span class="filter-chip" data-filter="piutang">Piutang</span>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; margin-top:12px;">
+                        <button class="reset-search-btn" onclick="resetMonthlyFilters()" style="background:#e2e8f0; border:none; border-radius:40px; padding:8px 16px;">Reset Filter</button>
+                    </div>
+                    <div id="searchStats" class="search-stats" style="font-size:12px; margin-top:8px;"></div>
+                </div>
+                <div id="monthlyHistory" class="month-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="payModal"><div class="modal-body"><h3>💵 Catat Pembayaran</h3><div id="sisaInfo" style="margin:15px 0;"></div><div class="form-group"><label>Tanggal Bayar</label><input type="date" id="pTgl" class="form-input"></div><div class="form-group"><label>Nominal (Rp)</label><input type="number" id="pNom" class="form-input"></div><div class="form-group"><label>Keterangan</label><input type="text" id="pKet" class="form-input" value="Tunai/Transfer"></div><button class="btn btn-success" onclick="savePay()">✅ SIMPAN BAYAR</button><button class="btn" onclick="closePay()" style="background:#e2e8f0;">BATAL</button></div></div>
+    <div id="restoreModal"><div class="modal-body"><h3>📋 Pulihkan dari Teks</h3><textarea id="restoreTextarea" class="form-textarea" rows="4" placeholder='[{"id":123,"j":"h", ...}]' style="font-family:monospace;"></textarea><button class="btn btn-success" onclick="executeRestore()">🔄 PULIHKAN</button><button class="btn" onclick="closeRestoreModal()">TUTUP</button></div></div>
+    <div id="monthModal"><div class="modal-body"><h3 id="monthModalTitle"></h3><div id="monthDetailContent" style="max-height:60vh; overflow-y:auto;"></div><button class="btn" onclick="closeMonthModal()" style="margin-top:16px;">Tutup</button></div></div>
+
+    <script>
+        const DB_KEY = 'keuangan_pro_v3';
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('tgl').value = today;
+        const bulanIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        let currentPayId = null, currentSisa = 0;
+        let allRawMonthlyData = [];
+
+        function getData() { return JSON.parse(localStorage.getItem(DB_KEY)) || []; }
+        function saveData(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+        // Konversi YYYY-MM-DD ke DD-MM-YYYY
+        function formatTanggalIndonesia(dateStr) {
+            if (!dateStr || dateStr === '-') return '-';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+
+        // Fungsi menentukan warna status berdasarkan: lunas (hijau), terlambat (merah), normal (hitam)
+        function getStatusColorClass(item) {
+            const sisa = item.n - item.b;
+            if (sisa === 0) return 'status-lunas'; // LUNAS -> Hijau
+            // Jika belum lunas -> cek apakah melewati jatuh tempo
+            if (item.tm && item.tm !== '-' && item.tm !== '') {
+                const dueDate = new Date(item.tm);
+                const todayDate = new Date(today);
+                // Reset jam agar perbandingan akurat
+                if (dueDate < todayDate) {
+                    return 'status-terlambat'; // Terlambat -> Merah
+                }
+            }
+            return 'status-normal'; // Belum jatuh tempo atau tidak ada tempo -> Hitam
+        }
+
+        // Sortir berdasarkan jatuh tempo terdekat (prioritas lebih dekat ke hari ini)
+        function sortByDueDate(items) {
+            const todayTime = new Date(today).getTime();
+            return [...items].sort((a, b) => {
+                // Item yang sudah lunas (sisa 0) taruh paling bawah
+                const sisaA = a.n - a.b;
+                const sisaB = b.n - b.b;
+                if (sisaA === 0 && sisaB !== 0) return 1;
+                if (sisaB === 0 && sisaA !== 0) return -1;
+                
+                const dueA = a.tm && a.tm !== '-' ? a.tm : null;
+                const dueB = b.tm && b.tm !== '-' ? b.tm : null;
+                if (!dueA && !dueB) return 0;
+                if (!dueA) return 1;
+                if (!dueB) return -1;
+                
+                const timeA = new Date(dueA).getTime();
+                const timeB = new Date(dueB).getTime();
+                return timeA - timeB;
+            });
+        }
+
+        function renderTable(type) {
+            const db = getData();
+            let items = db.filter(item => item.j === type);
+            items = sortByDueDate(items);
+            const containerId = (type === 'h') ? 'tableHContainer' : 'tablePContainer';
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            let totalSisa = 0;
+            if (items.length === 0) {
+                container.innerHTML = `<div style="padding: 30px; text-align:center; background:#f8fafc; border-radius:24px;">✨ Tidak ada data ${type === 'h' ? 'hutang' : 'piutang'}</div>`;
+                document.getElementById(type === 'h' ? 'totH' : 'totP').innerHTML = 'Rp 0';
+                return;
+            }
+            let tableHtml = `<table class="data-table"><thead><tr>
+                <th>Tanggal</th><th>Nama / Keterangan</th><th>Nominal Awal</th><th>Sisa Tagihan</th><th>Jatuh Tempo</th><th>Riwayat Bayar</th><th>Aksi</th>
+            </tr></thead><tbody>`;
+            
+            items.forEach(item => {
+                const sisa = item.n - item.b;
+                totalSisa += sisa;
+                const dueDateFormatted = item.tm === '-' ? 'Tidak ditentukan' : formatTanggalIndonesia(item.tm);
+                const transDateFormatted = formatTanggalIndonesia(item.t);
+                const historyHtml = (item.r && item.r.length) ? 
+                    `<div class="hist-mini">${item.r.map(r => `📌 ${formatTanggalIndonesia(r.t)} Rp ${r.n.toLocaleString()} (${escapeHtml(r.k)})`).join('<br>')}</div>` : 
+                    `<div class="hist-mini" style="background:#fef9e3;">Belum ada bayar</div>`;
+                
+                // Menentukan kelas warna untuk nama
+                const colorClass = getStatusColorClass(item);
+                // Tambahkan badge jika lunas
+                const lunasBadge = (sisa === 0) ? ' <span class="badge-lunas">✓ LUNAS</span>' : '';
+                
+                tableHtml += `<tr>
+                    <td>${escapeHtml(transDateFormatted)}</td>
+                    <td><span class="${colorClass}">${escapeHtml(item.k)}${lunasBadge}</span></td>
+                    <td>Rp ${item.n.toLocaleString()}</td>
+                    <td><span style="font-weight:800; color:#4f46e5;">Rp ${sisa.toLocaleString()}</span></td>
+                    <td>${dueDateFormatted}</td>
+                    <td>${historyHtml}</td>
+                    <td>
+                        ${sisa > 0 ? `<button class="btn-small" onclick="openPay(${item.id}, ${sisa})">💸 Bayar</button>` : `<span class="badge-lunas">✅ LUNAS</span>`}
+                        <button class="btn-small-outline" onclick="deleteItem(${item.id})">🗑 Hapus</button>
+                    </td>
+                　／`;
+            });
+            tableHtml += `</tbody><table>`;
+            container.innerHTML = tableHtml;
+            document.getElementById(type === 'h' ? 'totH' : 'totP').innerHTML = 'Rp ' + totalSisa.toLocaleString();
+        }
+
+        function filterTable(type, keyword) {
+            const db = getData();
+            let items = db.filter(item => item.j === type);
+            const lowerKw = keyword.toLowerCase();
+            let filtered = items.filter(item => item.k.toLowerCase().includes(lowerKw));
+            filtered = sortByDueDate(filtered);
+            const containerId = (type === 'h') ? 'tableHContainer' : 'tablePContainer';
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="padding:30px; text-align:center;">🔍 Tidak ada hasil untuk "${escapeHtml(keyword)}"</div>`;
+                document.getElementById(type === 'h' ? 'totH' : 'totP').innerHTML = 'Rp 0';
+                return;
+            }
+            let totalSisa = 0;
+            let tableHtml = `<table class="data-table"><thead><tr><th>Tanggal</th><th>Nama</th><th>Nominal Awal</th><th>Sisa</th><th>Tempo</th><th>Riwayat</th><th>Aksi</th></tr></thead><tbody>`;
+            filtered.forEach(item => {
+                const sisa = item.n - item.b;
+                totalSisa += sisa;
+                const dueDateFormatted = item.tm === '-' ? 'Tidak ditentukan' : formatTanggalIndonesia(item.tm);
+                const transDateFormatted = formatTanggalIndonesia(item.t);
+                const historyHtml = (item.r && item.r.length) ? `<div class="hist-mini">${item.r.map(r => `${formatTanggalIndonesia(r.t)} Rp ${r.n.toLocaleString()}`).join('<br>')}</div>` : `<div class="hist-mini">-</div>`;
+                const colorClass = getStatusColorClass(item);
+                const lunasBadge = (sisa === 0) ? ' <span class="badge-lunas">✓ LUNAS</span>' : '';
+                
+                tableHtml += `<tr>
+                    <td>${escapeHtml(transDateFormatted)}</td>
+                    <td><span class="${colorClass}">${escapeHtml(item.k)}${lunasBadge}</span></td>
+                    <td>Rp ${item.n.toLocaleString()}</td>
+                    <td>Rp ${sisa.toLocaleString()}</td>
+                    <td>${dueDateFormatted}</td>
+                    <td>${historyHtml}</td>
+                    <td>${sisa > 0 ? `<button class="btn-small" onclick="openPay(${item.id}, ${sisa})">Bayar</button>` : `<span class="badge-lunas">LUNAS</span>`}<button class="btn-small-outline" onclick="deleteItem(${item.id})">Hapus</button></td>
+                　／`;
+            });
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+            document.getElementById(type === 'h' ? 'totH' : 'totP').innerHTML = 'Rp ' + totalSisa.toLocaleString();
+        }
+
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+        document.getElementById('fForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const db = getData();
+            const newItem = {
+                id: Date.now(),
+                j: document.getElementById('jns').value,
+                t: document.getElementById('tgl').value,
+                tm: document.getElementById('tmp').value || '-',
+                n: parseFloat(document.getElementById('nom').value),
+                b: 0,
+                r: [],
+                k: document.getElementById('ket').value.trim()
+            };
+            if(isNaN(newItem.n) || newItem.n <= 0) return alert("Nominal > 0");
+            if(!newItem.k) return alert("Nama wajib diisi");
+            db.push(newItem);
+            saveData(db);
+            alert("✅ Data tersimpan!");
+            e.target.reset();
+            document.getElementById('tgl').value = today;
+            renderTable(newItem.j);
+            go(newItem.j, document.querySelector(`.nav-btn[onclick*="'${newItem.j}'"]`));
+        });
+
+        function openPay(id, sisa) { currentPayId = id; currentSisa = sisa; document.getElementById('pTgl').value = today; document.getElementById('pNom').value = ''; document.getElementById('sisaInfo').innerHTML = `💰 Sisa: <strong>Rp ${sisa.toLocaleString()}</strong>`; document.getElementById('payModal').style.display = 'flex'; }
+        function closePay() { document.getElementById('payModal').style.display = 'none'; }
+        function savePay() {
+            const nominal = parseFloat(document.getElementById('pNom').value);
+            if(isNaN(nominal) || nominal <= 0) return alert("Nominal valid");
+            if(nominal > currentSisa) return alert(`Melebihi sisa (Rp ${currentSisa.toLocaleString()})`);
+            const db = getData();
+            const idx = db.findIndex(i => i.id === currentPayId);
+            if(idx === -1) return alert("Data tidak ditemukan");
+            db[idx].b += nominal;
+            if(!db[idx].r) db[idx].r = [];
+            db[idx].r.push({ t: document.getElementById('pTgl').value, n: nominal, k: document.getElementById('pKet').value || 'Pembayaran' });
+            saveData(db);
+            closePay();
+            const activeScreen = document.querySelector('.screen.active').id;
+            if(activeScreen === 'h') renderTable('h');
+            else if(activeScreen === 'p') renderTable('p');
+            if(document.getElementById('st').classList.contains('active')) renderMonthlyHistoryWithSearch();
+        }
+
+        function deleteItem(id) {
+            if(confirm("Hapus data permanen?")) {
+                let db = getData();
+                db = db.filter(i => i.id !== id);
+                saveData(db);
+                const activeScreen = document.querySelector('.screen.active').id;
+                if(activeScreen === 'h') renderTable('h');
+                else if(activeScreen === 'p') renderTable('p');
+                if(document.getElementById('st').classList.contains('active')) renderMonthlyHistoryWithSearch();
+            }
+        }
+
+        function simpleBackup() { const db = getData(); if(!db.length) return alert("Tidak ada data"); navigator.clipboard.writeText(JSON.stringify(db)).then(() => alert("✅ Data disalin ke clipboard")); }
+        function openRestoreModal() { document.getElementById('restoreTextarea').value = ''; document.getElementById('restoreModal').style.display = 'flex'; }
+        function closeRestoreModal() { document.getElementById('restoreModal').style.display = 'none'; }
+        function executeRestore() { const raw = document.getElementById('restoreTextarea').value.trim(); if(!raw) return; try { const parsed = JSON.parse(raw); if(confirm("Ganti semua data?")) { saveData(parsed); alert("Restore berhasil"); closeRestoreModal(); renderTable('h'); renderTable('p'); renderMonthlyHistoryWithSearch(); } } catch(e) { alert("JSON tidak valid"); } }
+
+        function buildMonthlyData() {
+            const db = getData();
+            const monthlyMap = new Map();
+            db.forEach(item => {
+                if(item.r && Array.isArray(item.r)) {
+                    item.r.forEach(payment => {
+                        const dateKey = payment.t.substring(0, 7);
+                        if(!monthlyMap.has(dateKey)) monthlyMap.set(dateKey, { hutang: 0, piutang: 0, total: 0, transactions: [] });
+                        const group = monthlyMap.get(dateKey);
+                        group.total += payment.n;
+                        if(item.j === 'h') group.hutang += payment.n;
+                        else group.piutang += payment.n;
+                        group.transactions.push({ date: payment.t, name: item.k, amount: payment.n, type: item.j === 'h' ? 'hutang' : 'piutang', typeLabel: item.j === 'h' ? 'Hutang' : 'Piutang', desc: payment.k });
+                    });
+                }
+            });
+            const result = [];
+            for(let [monthKey, data] of monthlyMap.entries()) {
+                const [year, month] = monthKey.split('-');
+                const monthName = `${bulanIndo[parseInt(month)-1]} ${year}`;
+                result.push({ monthKey, monthName, ...data });
+            }
+            return result.sort((a,b) => b.monthKey.localeCompare(a.monthKey));
+        }
+
+        function filterMonthlyHistory() {
+            const searchText = document.getElementById('monthSearchInput').value.toLowerCase();
+            const activeChip = document.querySelector('.filter-chip.active-filter');
+            const activeType = activeChip ? activeChip.getAttribute('data-filter') : 'all';
+            let filteredMonths = allRawMonthlyData.map(month => {
+                let filteredTransactions = month.transactions.filter(tr => {
+                    const matchName = tr.name.toLowerCase().includes(searchText);
+                    const matchDesc = tr.desc.toLowerCase().includes(searchText);
+                    const matchText = matchName || matchDesc;
+                    const matchType = (activeType === 'all') || (activeType === 'hutang' && tr.type === 'hutang') || (activeType === 'piutang' && tr.type === 'piutang');
+                    return matchText && matchType;
+                });
+                if(filteredTransactions.length === 0) return null;
+                let hutangSum = 0, piutangSum = 0, totalSum = 0;
+                filteredTransactions.forEach(tr => { totalSum += tr.amount; if(tr.type === 'hutang') hutangSum += tr.amount; else piutangSum += tr.amount; });
+                return { ...month, transactions: filteredTransactions, hutang: hutangSum, piutang: piutangSum, total: totalSum };
+            }).filter(m => m !== null);
+            const historyDiv = document.getElementById('monthlyHistory');
+            if(filteredMonths.length === 0) { historyDiv.innerHTML = `<div class="empty-month-message">🔍 Tidak ada riwayat cocok</div>`; document.getElementById('searchStats').innerText = `0 bulan`; return; }
+            document.getElementById('searchStats').innerText = `${filteredMonths.length} bulan ditemukan (dari ${allRawMonthlyData.length})`;
+            historyDiv.innerHTML = '';
+            filteredMonths.forEach(month => {
+                const div = document.createElement('div');
+                div.className = 'month-item';
+                div.innerHTML = `<div class="month-title"><span>📅 ${month.monthName}</span><span class="month-badge">${month.transactions.length} transaksi</span></div><div class="month-stats-grid"><div class="stat-chip stat-total">💰 Total: Rp ${month.total.toLocaleString()}</div><div class="stat-chip stat-expense">🔻 Hutang: Rp ${month.hutang.toLocaleString()}</div><div class="stat-chip stat-income">🔺 Piutang: Rp ${month.piutang.toLocaleString()}</div></div><div style="font-size:12px; margin-top:12px;">✨ Klik detail</div>`;
+                div.addEventListener('click', () => showFilteredMonthDetail(month.monthName, month.transactions));
+                historyDiv.appendChild(div);
+            });
+        }
+
+        function showFilteredMonthDetail(monthName, transactions) {
+            document.getElementById('monthModalTitle').innerHTML = `📆 ${monthName}`;
+            const container = document.getElementById('monthDetailContent');
+            if(!transactions.length) { container.innerHTML = '<div>Tidak ada</div>'; }
+            else { let html = ''; transactions.sort((a,b)=>b.date.localeCompare(a.date)).forEach(tr => { html += `<div class="history-detail-item"><div>📆 ${formatTanggalIndonesia(tr.date)}</div><div><strong>${escapeHtml(tr.name)}</strong> <span style="background:#eef2ff; border-radius:20px; padding:2px 8px;">${tr.typeLabel}</span></div><div>Rp ${tr.amount.toLocaleString()}</div><div style="width:100%; font-size:12px;">📝 ${escapeHtml(tr.desc)}</div></div>`; }); container.innerHTML = html; }
+            document.getElementById('monthModal').style.display = 'flex';
+        }
+
+        function renderMonthlyHistoryWithSearch() { allRawMonthlyData = buildMonthlyData(); filterMonthlyHistory(); }
+        function resetMonthlyFilters() { document.getElementById('monthSearchInput').value = ''; document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active-filter')); document.querySelector('.filter-chip[data-filter="all"]').classList.add('active-filter'); filterMonthlyHistory(); }
+        function initFilterChips() { document.querySelectorAll('.filter-chip').forEach(chip => { chip.addEventListener('click', () => { document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active-filter')); chip.classList.add('active-filter'); filterMonthlyHistory(); }); }); }
+        function closeMonthModal() { document.getElementById('monthModal').style.display = 'none'; }
+        function go(id, btn) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(btn) btn.classList.add('active');
+            if(id === 'h') renderTable('h');
+            if(id === 'p') renderTable('p');
+            if(id === 'st') renderMonthlyHistoryWithSearch();
+        }
+
+        window.go = go; window.filterTable = filterTable; window.openPay = openPay; window.closePay = closePay; window.savePay = savePay; window.deleteItem = deleteItem; window.simpleBackup = simpleBackup; window.openRestoreModal = openRestoreModal; window.closeRestoreModal = closeRestoreModal; window.executeRestore = executeRestore; window.filterMonthlyHistory = filterMonthlyHistory; window.resetMonthlyFilters = resetMonthlyFilters; window.closeMonthModal = closeMonthModal;
+        renderTable('h'); renderTable('p'); renderMonthlyHistoryWithSearch(); initFilterChips();
+    </script>
+</body>
+</html>
